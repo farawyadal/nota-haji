@@ -1,9 +1,10 @@
 {
+  "id": "/nota-haji/",
   "name": "Nota Haji",
   "short_name": "Nota Haji",
   "description": "Nota kursus haji 12 minggu. Developed by FaridAssamani",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/nota-haji/",
+  "scope": "/nota-haji/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#EAEFE7",
