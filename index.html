@@ -39,6 +39,8 @@ button{cursor:pointer}
 .logo{width:46px;height:46px;border-radius:13px;background:var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .brand h1{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.01em}
 .brand p{margin:2px 0 0;font-size:13px;color:var(--mut)}
+.langbtn{margin-left:auto;min-height:44px;min-width:76px;padding:0 10px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:13px;color:var(--mut)}
+.langbtn b{color:var(--g)}
 .prog{display:flex;flex-direction:column;gap:8px}
 .prog-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
 .prog-top b{color:var(--g)}
@@ -123,10 +125,11 @@ button{cursor:pointer}
     <div class="head">
       <div class="brand">
         <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.2 5.2 7.8 4.6 4.5 4.6v12.9c3.3 0 5.7.6 7.5 1.9 1.8-1.3 4.2-1.9 7.5-1.9V4.6c-3.3 0-5.7.6-7.5 1.9z"/><path d="M12 6.5v12.9"/></svg></div>
-        <div><h1>Nota Haji</h1><p>Kursus Haji 1Malaysia · 12 minggu</p></div>
+        <div><h1>Nota Haji</h1><p id="sub">Kursus Haji 1Malaysia · 12 minggu</p></div>
+        <button type="button" class="langbtn" id="lang" aria-label="Language / Bahasa"></button>
       </div>
       <div class="prog">
-        <div class="prog-top"><span>Kemajuan bacaan</span><b id="progText">0 / 12 minggu</b></div>
+        <div class="prog-top"><span id="progLabel">Kemajuan bacaan</span><b id="progText">0 / 12 minggu</b></div>
         <div class="bar"><i id="progBar" style="width:0%"></i></div>
       </div>
       <label class="search">
@@ -171,9 +174,82 @@ var WEEKS=[
 {n:12,s:'Pengurusan Haji: Taklimat',f:'Pengurusan Haji: Taklimat Pengurusan',p:'263–284',d:''}
 ];
 var KEY='notahaji.v1';
-var S={links:{},done:{},last:null,indexId:null};
-try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;}}catch(e){}
+var S={links:{},done:{},last:null,indexId:null,lang:null};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var D={
+ms:{
+sub:'Kursus Haji 1Malaysia · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
+ph:'Cari tajuk minggu, cth. dam atau umrah',exp:'Salin kod pindah',imp:'Tampal kod pindah',dl:'Muat turun sandaran',up:'Muat naik sandaran',
+stDone:'Dibaca',stNow:'Sedang dibaca',stHas:'Ada nota',stNone:'Belum ada',
+noMatch:'Tiada tajuk padan.',pages:'Muka ',week:'Minggu ',cls:'Kelas ',
+mark:'Tanda dah baca',unmark:'Batal tanda dibaca',back:'Kembali ke senarai',dlPdf:'Muat turun PDF',
+addTab:'+ Tambah nota',openDrive:'Buka di Drive',remove:'Buang dari senarai',
+removeConfirm:function(l){return 'Buang "'+l+'" dari senarai? Fail dalam Drive tidak dipadam.';},
+emptyRemote:'Kalau kosong, minta pemilik semak perkongsian fail ni.',emptyLocal:'Kalau kosong, log masuk akaun Google yang simpan fail ni.',
+removeFail:'Gagal kemas kini senarai kongsi.',
+ownIn:'Log masuk pemilik (untuk upload)',ownOk:'Log masuk sebagai pemilik',shareBtn:'Salin pautan kongsi app',
+connecting:'Menyambung ke Google…',setupFolder:'Menyediakan folder Drive…',
+notOwner:function(o){return 'Akaun itu bukan pemilik app. Upload hanya untuk '+o+'.';},
+signFail:function(e){return 'Log masuk gagal: '+e;},unknown:'tidak diketahui',cancelled:'dibatalkan',
+noClient:'CLIENT_ID belum diisi dalam config.js',
+indexFail:'Tak dapat muat senarai nota dikongsi. Semak sambungan atau pautan kongsi.',
+gsiFail:'Tak dapat muat Google Sign-In. Semak sambungan internet.',
+startFail:function(c){return 'Mula upload gagal ('+c+')';},noAddr:'Drive tak beri alamat upload',
+upFail:function(c){return 'Upload gagal ('+c+')';},
+failCap:function(e){return 'Gagal: '+e+'. Cuba log masuk pemilik semula.';},
+shareCopied:'Pautan kongsi disalin. Hantar kepada keluarga atau kawan.',sharePrompt:'Salin pautan ni dan hantar kepada keluarga/kawan:',
+addFirst:'Tambah nota minggu ni',addMore:'Tambah nota lagi',nameField:'Nama fail',phLabel:'Cth. Bahagian A',part:'Bahagian ',fileDef:'Fail ',
+ownP:'Pilih PDF dari peranti ni. Nota disimpan dalam folder Drive ko dan boleh dibaca sesiapa yang ada pautan app. Upload hanya boleh dibuat oleh pemilik.',
+pdfField:'Fail PDF',uploadBtn:'Upload ke Drive',uploading:'Memuat naik…',orLink:'Atau tampal pautan Drive',
+linkP:'Dalam Google Drive, buka PDF, tekan Kongsi, Salin pautan, kemudian tampal di sini. Nota kekal dalam Drive, bukan dalam app.',
+linkP2:' Upload terus dari app hanya untuk pemilik (log masuk pemilik di senarai).',
+linkField:'Pautan Drive',saveLink:'Simpan pautan',cancel:'Batal',
+folderErr:'Itu pautan folder. Guna pautan fail PDF (Kongsi, Salin pautan).',badLink:'Pautan tak dikenali. Tampal pautan fail Google Drive.',
+pickPdf:'Pilih fail PDF dulu.',mustPdf:'Fail mesti PDF.',
+codeCopied:'Kod disalin. Tampal di peranti lain guna "Tampal kod pindah".',codeSalin:'Salin kod ni, tampal kat peranti lain:',
+codePaste:'Tampal kod pindah dari peranti lain:',merged:'Siap digabungkan.',badCode:'Kod tak sah. Salin semula dari peranti lain.',
+restored:'Sandaran dipulihkan dan digabungkan.',badBackup:'Fail sandaran tak sah.',
+months:{}
+},
+en:{
+sub:'Kursus Haji 1Malaysia · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
+ph:'Search week titles, e.g. dam or umrah',exp:'Copy transfer code',imp:'Paste transfer code',dl:'Download backup',up:'Upload backup',
+stDone:'Read',stNow:'Reading',stHas:'Notes added',stNone:'No notes yet',
+noMatch:'No matching titles.',pages:'Book pp. ',week:'Week ',cls:'Class ',
+mark:'Mark as read',unmark:'Unmark as read',back:'Back to list',dlPdf:'Download PDF',
+addTab:'+ Add note',openDrive:'Open in Drive',remove:'Remove from list',
+removeConfirm:function(l){return 'Remove "'+l+'" from the list? The file in Drive is not deleted.';},
+emptyRemote:'If it shows blank, ask the owner to check this file’s sharing.',emptyLocal:'If it shows blank, sign in to the Google account that holds this file.',
+removeFail:'Could not update the shared list.',
+ownIn:'Owner sign-in (to upload)',ownOk:'Signed in as owner',shareBtn:'Copy app share link',
+connecting:'Connecting to Google…',setupFolder:'Setting up the Drive folder…',
+notOwner:function(o){return 'That account is not the app owner. Upload is only for '+o+'.';},
+signFail:function(e){return 'Sign-in failed: '+e;},unknown:'unknown',cancelled:'cancelled',
+noClient:'CLIENT_ID is not set in config.js',
+indexFail:'Could not load the shared notes list. Check your connection or the share link.',
+gsiFail:'Could not load Google Sign-In. Check your internet connection.',
+startFail:function(c){return 'Could not start upload ('+c+')';},noAddr:'Drive did not return an upload address',
+upFail:function(c){return 'Upload failed ('+c+')';},
+failCap:function(e){return 'Failed: '+e+'. Try signing in as owner again.';},
+shareCopied:'Share link copied. Send it to family or friends.',sharePrompt:'Copy this link and send it to family/friends:',
+addFirst:'Add a note for this week',addMore:'Add another note',nameField:'File name',phLabel:'e.g. Part A',part:'Part ',fileDef:'File ',
+ownP:'Pick a PDF from this device. It is saved in your Drive folder and anyone with the app link can read it. Only the owner can upload.',
+pdfField:'PDF file',uploadBtn:'Upload to Drive',uploading:'Uploading…',orLink:'Or paste a Drive link',
+linkP:'In Google Drive, open the PDF, tap Share, Copy link, then paste it here. The notes stay in Drive, not in the app.',
+linkP2:' Uploading straight from the app is for the owner only (owner sign-in is in the list).',
+linkField:'Drive link',saveLink:'Save link',cancel:'Cancel',
+folderErr:'That is a folder link. Use the link of the PDF file (Share, Copy link).',badLink:'Link not recognised. Paste a Google Drive file link.',
+pickPdf:'Pick a PDF file first.',mustPdf:'The file must be a PDF.',
+codeCopied:'Code copied. Paste it on another device with "Paste transfer code".',codeSalin:'Copy this code and paste it on the other device:',
+codePaste:'Paste the transfer code from the other device:',merged:'Merged.',badCode:'Invalid code. Copy it again from the other device.',
+restored:'Backup restored and merged.',badBackup:'Invalid backup file.',
+months:{Okt:'Oct'}
+}};
+function L(){return S.lang||((navigator.language||'').toLowerCase().indexOf('ms')===0?'ms':'en');}
+function t(k,a){var v=(D[L()]||D.ms)[k];if(v===undefined)v=D.ms[k];return typeof v==='function'?v(a):v;}
+function dt(d){var m=D[L()].months;return d.replace(/[A-Za-z]+/g,function(x){return m[x]||x;});}
+
 
 var remote={links:{}};          // indeks nota dari Drive (dikongsi pemilik)
 var token=null,tokenExp=0,tc=null;
@@ -224,10 +300,10 @@ function linksOf(n){
   return out;
 }
 function statusOf(n){
-  if(S.done[n])return['Dibaca','done'];
-  if(S.last===n)return['Sedang dibaca','now'];
-  if(linksOf(n).length)return['Ada nota','has'];
-  return['Belum ada',''];
+  if(S.done[n])return[t('stDone'),'done'];
+  if(S.last===n)return[t('stNow'),'now'];
+  if(linksOf(n).length)return[t('stHas'),'has'];
+  return[t('stNone'),''];
 }
 function normIndex(j){
   var out={links:{}};
@@ -250,7 +326,7 @@ function loadRemote(){
   else return Promise.resolve();
   return req.then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(j){remote=normIndex(j);renderList();renderDetail();})
-    .catch(function(){msg='Tak dapat muat senarai nota dikongsi. Semak sambungan atau pautan kongsi.';renderOwner();});
+    .catch(function(){msg=t('indexFail');renderOwner();});
 }
 
 /* ---------- Log masuk Google (pemilik sahaja) ---------- */
@@ -259,13 +335,13 @@ function loadGsi(cb){
   var s=document.createElement('script');
   s.src='https://accounts.google.com/gsi/client';
   s.onload=cb;
-  s.onerror=function(){msg='Tak dapat muat Google Sign-In. Semak sambungan internet.';renderOwner();};
+  s.onerror=function(){msg=t('gsiFail');renderOwner();};
   document.head.appendChild(s);
 }
 function getToken(interactive){
   return new Promise(function(res,rej){
     if(token&&Date.now()<tokenExp-60000)return res(token);
-    if(!CFG.CLIENT_ID)return rej(new Error('CLIENT_ID belum diisi dalam config.js'));
+    if(!CFG.CLIENT_ID)return rej(new Error(t('noClient')));
     loadGsi(function(){
       if(!tc){
         tc=google.accounts.oauth2.initTokenClient({
@@ -275,7 +351,7 @@ function getToken(interactive){
             if(r.error){tc._rej(new Error(r.error));return;}
             token=r.access_token;tokenExp=Date.now()+(r.expires_in||3600)*1000;tc._res(token);
           },
-          error_callback:function(e){tc._rej(new Error((e&&e.type)||'dibatalkan'));}
+          error_callback:function(e){tc._rej(new Error((e&&e.type)||t('cancelled')));}
         });
       }
       tc._res=res;tc._rej=rej;
@@ -322,22 +398,22 @@ function pushIndex(){
   return gfetch('https://www.googleapis.com/upload/drive/v3/files/'+S.indexId+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({v:1,links:remote.links})});
 }
 function signIn(){
-  msg='Menyambung ke Google…';renderOwner();
+  msg=t('connecting');renderOwner();
   getToken(true).then(function(t){
     return fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+t}}).then(function(r){return r.json();});
   }).then(function(u){
     if(!u.email||u.email.toLowerCase()!==OWNER){
       try{google.accounts.oauth2.revoke(token,function(){});}catch(e){}
       token=null;owner=false;
-      msg='Akaun itu bukan pemilik app. Upload hanya untuk '+OWNER+'.';
+      msg=t('notOwner',OWNER);
       renderOwner();renderDetail();
       return null;
     }
-    owner=true;msg='Menyediakan folder Drive…';renderOwner();
+    owner=true;msg=t('setupFolder');renderOwner();
     return ensureSetup().then(function(){msg='';renderOwner();renderList();renderDetail();});
   }).catch(function(e){
     owner=false;token=null;
-    msg='Log masuk gagal: '+(e&&e.message?e.message:'tidak diketahui');
+    msg=t('signFail',(e&&e.message?e.message:t('unknown')));
     renderOwner();
   });
 }
@@ -349,12 +425,12 @@ function uploadPdf(file){
       body:JSON.stringify({name:file.name,parents:[folderId],mimeType:'application/pdf'})
     });
   }).then(function(r){
-    if(!r.ok)throw new Error('Mula upload gagal ('+r.status+')');
+    if(!r.ok)throw new Error(t('startFail',r.status));
     var loc=r.headers.get('Location');
-    if(!loc)throw new Error('Drive tak beri alamat upload');
+    if(!loc)throw new Error(t('noAddr'));
     return fetch(loc,{method:'PUT',headers:{'Content-Type':'application/pdf'},body:file});
   }).then(function(r){
-    if(!r.ok)throw new Error('Upload gagal ('+r.status+')');
+    if(!r.ok)throw new Error(t('upFail',r.status));
     return r.json();
   }).then(function(f){
     return makePublic(f.id).then(function(){return f;});
@@ -363,9 +439,9 @@ function uploadPdf(file){
 function shareLink(){
   if(!S.indexId)return;
   var url=location.origin+location.pathname+'#/s/'+S.indexId;
-  function fb(){window.prompt('Salin pautan ni dan hantar kepada keluarga/kawan:',url);}
+  function fb(){window.prompt(t('sharePrompt'),url);}
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(function(){msg='Pautan kongsi disalin. Hantar kepada keluarga atau kawan.';renderOwner();},fb);
+    navigator.clipboard.writeText(url).then(function(){msg=t('shareCopied');renderOwner();},fb);
   }else fb();
 }
 
@@ -375,29 +451,29 @@ function renderOwner(){
   box.textContent='';
   if(!CFG.CLIENT_ID){return;}
   if(!owner){
-    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:signIn,text:'Log masuk pemilik (untuk upload)'}));
+    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:signIn,text:t('ownIn')}));
   }else{
-    box.appendChild(h('div',{class:'note ok',text:'Log masuk sebagai pemilik'}));
-    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:shareLink,text:'Salin pautan kongsi app'}));
+    box.appendChild(h('div',{class:'note ok',text:t('ownOk')}));
+    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:shareLink,text:t('shareBtn')}));
   }
   if(msg)box.appendChild(h('div',{class:'note',role:'status',text:msg}));
 }
 
 function renderList(){
   var done=WEEKS.filter(function(w){return S.done[w.n];}).length;
-  $('progText').textContent=done+' / 12 minggu';
+  $('progText').textContent=done+' / 12 '+t('weeks');
   $('progBar').style.width=Math.round(done/12*100)+'%';
   var q=query.trim().toLowerCase();
   var rows=$('rows');
   rows.textContent='';
   var shown=WEEKS.filter(function(w){return !q||(w.f+' '+w.s+' minggu '+w.n).toLowerCase().indexOf(q)>-1;});
-  if(!shown.length){rows.appendChild(h('p',{class:'err',style:'padding:12px',text:'Tiada tajuk padan.'}));return;}
+  if(!shown.length){rows.appendChild(h('p',{class:'err',style:'padding:12px',text:t('noMatch')}));return;}
   shown.forEach(function(w){
     var st=statusOf(w.n);
     var cls='row'+(sel===w.n&&wide.matches?' sel':'')+(S.done[w.n]?' done':'')+(S.last===w.n&&!S.done[w.n]?' nowr':'');
     rows.appendChild(h('button',{type:'button',class:cls,onclick:function(){go(w.n);}},
       h('div',{class:'num',text:String(w.n)}),
-      h('div',{class:'rt'},h('b',{text:w.s}),h('span',{text:'Muka '+w.p+(w.d?' · '+w.d:'')})),
+      h('div',{class:'rt'},h('b',{text:w.s}),h('span',{text:t('pages')+w.p+(w.d?' · '+dt(w.d):'')})),
       h('div',{class:'chip '+st[1],text:st[0]})
     ));
   });
@@ -408,7 +484,7 @@ function markBtn(n,extra){
   return h('button',{type:'button',class:'primary'+(d?' off':'')+(extra?' '+extra:''),onclick:function(){
     if(S.done[n])delete S.done[n];else S.done[n]=true;
     save();renderList();renderDetail();
-  }},svg(ICON.ok,18),d?'Batal tanda dibaca':'Tanda dah baca');
+  }},svg(ICON.ok,18),d?t('unmark'):t('mark'));
 }
 
 function renderDetail(){
@@ -420,13 +496,13 @@ function renderDetail(){
   var cur=links[active];
 
   box.appendChild(h('div',{class:'top'},
-    h('button',{type:'button',class:'icon-btn back','aria-label':'Kembali ke senarai',onclick:function(){go(null);}},svg(ICON.back,24)),
+    h('button',{type:'button',class:'icon-btn back','aria-label':t('back'),onclick:function(){go(null);}},svg(ICON.back,24)),
     h('div',{class:'t'},
-      h('div',{class:'eyebrow',text:'Minggu '+w.n+(w.d?' · Kelas '+w.d:'')}),
+      h('div',{class:'eyebrow',text:t('week')+w.n+(w.d?' · '+t('cls')+dt(w.d):'')}),
       h('h2',{text:w.s}),
       h('p',{text:w.f})
     ),
-    cur?h('a',{class:'icon-btn',href:'https://drive.google.com/uc?export=download&id='+cur.id,target:'_blank',rel:'noopener','aria-label':'Muat turun PDF',style:'text-decoration:none;color:inherit'},svg(ICON.dl)):null,
+    cur?h('a',{class:'icon-btn',href:'https://drive.google.com/uc?export=download&id='+cur.id,target:'_blank',rel:'noopener','aria-label':t('dlPdf'),style:'text-decoration:none;color:inherit'},svg(ICON.dl)):null,
     markBtn(w.n)
   ));
 
@@ -434,7 +510,7 @@ function renderDetail(){
   links.forEach(function(l,i){
     tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;renderDetail();}},l.label));
   });
-  if(links.length)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},'+ Tambah nota'));
+  if(links.length)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},t('addTab')));
   if(links.length)box.appendChild(tabs);
 
   var stage=h('div',{class:'stage'});
@@ -443,22 +519,22 @@ function renderDetail(){
   }else{
     stage.appendChild(h('iframe',{class:'frame',src:'https://drive.google.com/file/d/'+cur.id+'/preview',title:cur.label,allow:'fullscreen',loading:'lazy'}));
     var bar=h('div',{class:'stage-bar'},
-      h('a',{href:'https://drive.google.com/file/d/'+cur.id+'/view',target:'_blank',rel:'noopener',text:'Buka di Drive'})
+      h('a',{href:'https://drive.google.com/file/d/'+cur.id+'/view',target:'_blank',rel:'noopener',text:t('openDrive')})
     );
     if(!cur.remote||owner){
       bar.appendChild(h('button',{type:'button',class:'danger',onclick:function(){
-        if(!confirm('Buang "'+cur.label+'" dari senarai? Fail dalam Drive tidak dipadam.'))return;
+        if(!confirm(t('removeConfirm',cur.label)))return;
         if(cur.remote){
           var a=remoteLinks(sel);
           for(var i=0;i<a.length;i++){if(a[i].id===cur.id){a.splice(i,1);break;}}
-          pushIndex().catch(function(){msg='Gagal kemas kini senarai kongsi.';renderOwner();});
+          pushIndex().catch(function(){msg=t('removeFail');renderOwner();});
         }
         var b=localLinks(sel);
         for(var j=0;j<b.length;j++){if(b[j].id===cur.id){b.splice(j,1);break;}}
         active=0;save();renderList();renderDetail();
-      }},'Buang dari senarai'));
+      }},t('remove')));
     }
-    bar.appendChild(h('span',{text:cur.remote?'Kalau kosong, minta pemilik semak perkongsian fail ni.':'Kalau kosong, log masuk akaun Google yang simpan fail ni.'}));
+    bar.appendChild(h('span',{text:cur.remote?t('emptyRemote'):t('emptyLocal')}));
     stage.appendChild(bar);
   }
   box.appendChild(stage);
@@ -467,27 +543,27 @@ function renderDetail(){
 
 function addCard(first){
   var link=h('input',{type:'url',id:'lnk',placeholder:'https://drive.google.com/file/d/…',autocomplete:'off'});
-  var lab=h('input',{type:'text',id:'lab',placeholder:'Cth. Bahagian A',autocomplete:'off',value:'Bahagian '+String.fromCharCode(65+linksOf(sel).length)});
+  var lab=h('input',{type:'text',id:'lab',placeholder:t('phLabel'),autocomplete:'off',value:t('part')+String.fromCharCode(65+linksOf(sel).length)});
   var err=h('div',{class:'err',role:'alert'});
   var fileIn=h('input',{type:'file',id:'pdf',accept:'application/pdf,.pdf'});
-  var upBtn=h('button',{type:'button',class:'primary',text:'Upload ke Drive'});
+  var upBtn=h('button',{type:'button',class:'primary',text:t('uploadBtn')});
 
   function addLocal(){
     var v=link.value.trim();
-    if(/\/folders\//.test(v)){err.textContent='Itu pautan folder. Guna pautan fail PDF (Kongsi, Salin pautan).';return;}
+    if(/\/folders\//.test(v)){err.textContent=t('folderErr');return;}
     var id=driveId(v);
-    if(!id){err.textContent='Pautan tak dikenali. Tampal pautan fail Google Drive.';return;}
+    if(!id){err.textContent=t('badLink');return;}
     var l=localLinks(sel);
-    l.push({label:lab.value.trim()||('Fail '+(l.length+1)),id:id});
+    l.push({label:lab.value.trim()||(t('fileDef')+(l.length+1)),id:id});
     active=linksOf(sel).length-1;adding=false;S.last=sel;
     save();renderList();renderDetail();
   }
   function doUpload(){
     var f=fileIn.files&&fileIn.files[0];
-    if(!f){err.textContent='Pilih fail PDF dulu.';return;}
-    if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf'){err.textContent='Fail mesti PDF.';return;}
+    if(!f){err.textContent=t('pickPdf');return;}
+    if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf'){err.textContent=t('mustPdf');return;}
     if(busy)return;
-    busy=true;upBtn.disabled=true;upBtn.textContent='Memuat naik…';err.textContent='';
+    busy=true;upBtn.disabled=true;upBtn.textContent=t('uploading');err.textContent='';
     var label=lab.value.trim()||f.name.replace(/\.pdf$/i,'');
     var wk=sel;
     uploadPdf(f).then(function(r){
@@ -496,27 +572,27 @@ function addCard(first){
         busy=false;active=linksOf(wk).length-1;adding=false;S.last=wk;save();renderList();renderDetail();
       });
     }).catch(function(e){
-      busy=false;upBtn.disabled=false;upBtn.textContent='Upload ke Drive';
-      err.textContent='Gagal: '+(e&&e.message?e.message:'tidak diketahui')+'. Cuba log masuk pemilik semula.';
+      busy=false;upBtn.disabled=false;upBtn.textContent=t('uploadBtn');
+      err.textContent=t('failCap',(e&&e.message?e.message:t('unknown')));
     });
   }
   upBtn.addEventListener('click',doUpload);
 
-  var card=h('div',{class:'card'},h('h3',{text:first?'Tambah nota minggu ni':'Tambah nota lagi'}));
-  card.appendChild(h('label',{class:'field'},'Nama fail',lab));
+  var card=h('div',{class:'card'},h('h3',{text:first?t('addFirst'):t('addMore')}));
+  card.appendChild(h('label',{class:'field'},t('nameField'),lab));
   if(owner){
-    card.appendChild(h('p',{text:'Pilih PDF dari peranti ni. Nota disimpan dalam folder Drive ko dan boleh dibaca sesiapa yang ada pautan app. Upload hanya boleh dibuat oleh pemilik.'}));
-    card.appendChild(h('label',{class:'field'},'Fail PDF',fileIn));
+    card.appendChild(h('p',{text:t('ownP')}));
+    card.appendChild(h('label',{class:'field'},t('pdfField'),fileIn));
     card.appendChild(upBtn);
     card.appendChild(h('hr'));
-    card.appendChild(h('h4',{text:'Atau tampal pautan Drive'}));
+    card.appendChild(h('h4',{text:t('orLink')}));
   }else{
-    card.appendChild(h('p',{text:'Dalam Google Drive, buka PDF, tekan Kongsi, Salin pautan, kemudian tampal di sini. Nota kekal dalam Drive, bukan dalam app.'+(CFG.CLIENT_ID?' Upload terus dari app hanya untuk pemilik (log masuk pemilik di senarai).':'')}));
+    card.appendChild(h('p',{text:t('linkP')+(CFG.CLIENT_ID?t('linkP2'):'')}));
   }
-  card.appendChild(h('label',{class:'field'},'Pautan Drive',link));
+  card.appendChild(h('label',{class:'field'},t('linkField'),link));
   card.appendChild(err);
-  card.appendChild(h('button',{type:'button',class:owner?'tab':'primary',onclick:addLocal},'Simpan pautan'));
-  if(!first)card.appendChild(h('button',{type:'button',class:'tab',onclick:function(){adding=false;renderDetail();}},'Batal'));
+  card.appendChild(h('button',{type:'button',class:owner?'tab':'primary',onclick:addLocal},t('saveLink')));
+  if(!first)card.appendChild(h('button',{type:'button',class:'tab',onclick:function(){adding=false;renderDetail();}},t('cancel')));
   return card;
 }
 
@@ -546,13 +622,28 @@ window.addEventListener('popstate',route);
 window.addEventListener('hashchange',route);
 if(wide.addEventListener)wide.addEventListener('change',route);
 
+function applyStatic(){
+  document.documentElement.lang=L()==='en'?'en':'ms';
+  $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
+  $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
+  $('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
+  var b=$('lang');b.textContent='';
+  var en=L()==='en';
+  var a=document.createElement(en?'span':'b');a.textContent='BM';
+  var c=document.createElement(en?'b':'span');c.textContent='EN';
+  b.appendChild(a);b.appendChild(document.createTextNode(' | '));b.appendChild(c);
+}
+$('lang').addEventListener('click',function(){
+  S.lang=L()==='en'?'ms':'en';save();
+  applyStatic();renderOwner();renderList();renderDetail();
+});
 $('q').addEventListener('input',function(e){query=e.target.value;renderList();});
 
 $('exp').addEventListener('click',function(){
   var code=btoa(unescape(encodeURIComponent(JSON.stringify({links:S.links,done:S.done,indexId:S.indexId}))));
-  function fallback(){window.prompt('Salin kod ni, tampal kat peranti lain:',code);}
+  function fallback(){window.prompt(t('codeSalin'),code);}
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(code).then(function(){alert('Kod disalin. Tampal di peranti lain guna "Tampal kod pindah".');},fallback);
+    navigator.clipboard.writeText(code).then(function(){alert(t('codeCopied'));},fallback);
   }else fallback();
 });
 function applyBackup(o){
@@ -568,12 +659,12 @@ function applyBackup(o){
   save();route();loadRemote();
 }
 $('imp').addEventListener('click',function(){
-  var code=window.prompt('Tampal kod pindah dari peranti lain:');
+  var code=window.prompt(t('codePaste'));
   if(!code)return;
   try{
     applyBackup(JSON.parse(decodeURIComponent(escape(atob(code.trim())))));
-    alert('Siap digabungkan.');
-  }catch(e){alert('Kod tak sah. Salin semula dari peranti lain.');}
+    alert(t('merged'));
+  }catch(e){alert(t('badCode'));}
 });
 $('dl').addEventListener('click',function(){
   var d=new Date(),pad=function(x){return (x<10?'0':'')+x;};
@@ -590,12 +681,13 @@ $('upf').addEventListener('change',function(e){
   if(!f)return;
   var r=new FileReader();
   r.onload=function(){
-    try{applyBackup(JSON.parse(r.result));alert('Sandaran dipulihkan dan digabungkan.');}
-    catch(err){alert('Fail sandaran tak sah.');}
+    try{applyBackup(JSON.parse(r.result));alert(t('restored'));}
+    catch(err){alert(t('badBackup'));}
   };
   r.readAsText(f);
 });
 
+applyStatic();
 renderOwner();
 route();
 loadRemote();
