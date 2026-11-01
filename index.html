@@ -75,6 +75,14 @@ button{cursor:pointer}
 .sheet .tools{display:flex;gap:8px;flex-wrap:wrap}
 .sheet .tools button,.sheet .ownbtn,.sheet .xbtn{flex:1 1 40%;min-height:48px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
 .sheet .xbtn{flex:0 0 auto;padding:0 16px}
+.nsheet textarea{width:100%;min-height:42vh;border:1px solid #C3D0BF;border-radius:12px;padding:12px;font:inherit;font-size:16px;line-height:1.55;color:var(--ink);resize:vertical;background:#fff}
+.nsheet textarea:focus{outline:2px solid var(--g);outline-offset:1px}
+.nsheet .mtabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.nsheet .mtabs .tab{height:44px;padding:0 16px;position:relative}
+.nsheet .mtabs .tab.has:not(.on)::after{content:'';position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--g)}
+.nsheet .nrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.nsheet .nrow span{font-size:13px;color:var(--mut)}
+.nsheet .nrow button{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
 @media (min-width:900px){.sheetbg{align-items:center}.sheet{border-radius:18px}}
 .foot .tools button,.ownbtn{flex:1 1 40%;min-height:44px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:12px;font-weight:600}
 .ownbtn{width:100%}
@@ -169,7 +177,7 @@ button{cursor:pointer}
     <div class="rows" id="rows"></div>
     <div class="foot">
       <div class="own" id="ownmsg"></div>
-      <div class="tools"><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
+      <div class="tools"><button type="button" id="notebtn"></button><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
       <small>Developed by FaridAssamani</small>
     </div>
   </aside>
@@ -181,6 +189,15 @@ button{cursor:pointer}
     <div class="sheet-top"><h2 id="setH">Tetapan</h2><button type="button" class="xbtn" id="setx">Tutup</button></div>
     <p id="setIntro"></p>
     <section id="s3"><h3 id="s3h"></h3><p id="s3p"></p><div class="own" id="own"></div></section>
+  </div>
+</div>
+<div class="sheetbg nsheet" id="nsheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="nH">
+    <div class="sheet-top"><h2 id="nH"></h2><button type="button" class="xbtn" id="nx"></button></div>
+    <p id="nP"></p>
+    <div class="mtabs" id="mtabs"></div>
+    <textarea id="nta"></textarea>
+    <div class="nrow"><span id="nst" role="status"></span><button type="button" id="ncp"></button></div>
   </div>
 </div>
 <script src="config.js"></script>
@@ -217,12 +234,12 @@ var BUILTIN={
 11:[['A','1ERMkz00Wx5PpZ1cvKIcwzx5CBNQHvrD1'],['B','13Cs81OMa396Q6NkbccHoCrUhvYVh3c97']]
 };
 var KEY='notahaji.v1';
-var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false};
-try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;}}catch(e){}
+var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false,notes:{}};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;S.notes=o.notes||{};}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
-sub:'Kursus Asas Haji 2026 · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
+sub:'Kursus Asas Haji 2026 · 12 minggu',notesBtn:'\u270E Catatan',notesH:'Catatan saya',notesP:'Tulis catatan sendiri mengikut bulan. Catatan disimpan di peranti ini sahaja dan tidak dikongsi.',notesPh:'Taip catatan di sini\u2026',notesSaved:'Disimpan di peranti ini',notesCopy:'Salin',notesCopied:'Disalin',monN:['','Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'],progLabel:'Kemajuan bacaan',weeks:'minggu',
 settings:'Tetapan',close:'Tutup',enlarge:'Besarkan nota',exitFocus:'Keluar',noNotes:'Nota minggu ini belum ada.',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
 setIntro:'Bahagian ini untuk pemilik app sahaja.',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
@@ -299,6 +316,7 @@ pickPdf:'Pick a PDF file first.',mustPdf:'The file must be a PDF.',
 codeCopied:'Code copied. Paste it on another device with "Paste transfer code".',codeSalin:'Copy this code and paste it on the other device:',
 codePaste:'Paste the transfer code from the other device:',merged:'Merged.',badCode:'Invalid code. Copy it again from the other device.',
 restored:'Backup restored and merged.',badBackup:'Invalid backup file.',
+notesBtn:'\u270E Notes',notesH:'My notes',notesP:'Write your own notes for each month. They are saved on this device only and are not shared.',notesPh:'Type your notes here\u2026',notesSaved:'Saved on this device',notesCopy:'Copy',notesCopied:'Copied',monN:['','January','February','March','April','May','June','July','August','September','October','November','December'],
 months:{Okt:'Oct',Dis:'Dec'}
 }};
 function L(){return S.lang||((navigator.language||'').toLowerCase().indexOf('ms')===0?'ms':'en');}
@@ -732,7 +750,7 @@ function applyStatic(){
   document.documentElement.lang=L()==='en'?'en':'ms';
   $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
   $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
-  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;
+  $('setbtn').textContent='\u2699 '+t('settings');$('notebtn').textContent=t('notesBtn');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;
   var b=$('lang');b.textContent='';
   var en=L()==='en';
   var a=document.createElement(en?'span':'b');a.textContent='BM';
@@ -751,12 +769,37 @@ $('instbtn').addEventListener('click',function(){
   var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   alert(ios?t('installIos'):t('installOther'));
 });
+var NM=[9,10,11,12],nmon=null,ntimer=null;
+function nkey(m){return '2026-'+(m<10?'0':'')+m;}
+function nsave(){var v=$('nta').value,k=nkey(nmon);if(v.trim())S.notes[k]=v;else delete S.notes[k];save();$('nst').textContent=t('notesSaved');renderMonths();}
+function renderMonths(){
+  var b=$('mtabs');b.textContent='';
+  NM.forEach(function(m){
+    b.appendChild(h('button',{type:'button',class:'tab'+(m===nmon?' on':'')+(S.notes[nkey(m)]?' has':''),onclick:function(){if(ntimer){clearTimeout(ntimer);ntimer=null;nsave();}nmon=m;$('nta').value=S.notes[nkey(m)]||'';$('nst').textContent='';renderMonths();$('nta').focus();}},t('monN')[m]));
+  });
+}
+function openNotes(){
+  if(nmon===null){var m=new Date().getMonth()+1;nmon=m<9?9:(m>12?12:m);}
+  $('nH').textContent=t('notesH');$('nP').textContent=t('notesP');$('nx').textContent=t('close');$('ncp').textContent=t('notesCopy');$('nta').placeholder=t('notesPh');
+  $('nta').value=S.notes[nkey(nmon)]||'';$('nst').textContent='';
+  renderMonths();$('nsheet').hidden=false;$('nta').focus();
+}
+function closeNotes(){if(ntimer){clearTimeout(ntimer);ntimer=null;nsave();}$('nsheet').hidden=true;$('notebtn').focus();}
+$('notebtn').addEventListener('click',openNotes);
+$('nx').addEventListener('click',closeNotes);
+$('nsheet').addEventListener('click',function(e){if(e.target===$('nsheet'))closeNotes();});
+$('nta').addEventListener('input',function(){$('nst').textContent='';if(ntimer)clearTimeout(ntimer);ntimer=setTimeout(function(){ntimer=null;nsave();},500);});
+$('ncp').addEventListener('click',function(){
+  var v=$('nta').value;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(function(){$('nst').textContent=t('notesCopied');});}
+  else{$('nta').select();try{document.execCommand('copy');$('nst').textContent=t('notesCopied');}catch(e){}}
+});
 function openSheet(){$('sheet').hidden=false;$('setx').focus();}
 function closeSheet(){$('sheet').hidden=true;$('setbtn').focus();}
 $('setbtn').addEventListener('click',openSheet);
 $('setx').addEventListener('click',closeSheet);
 $('sheet').addEventListener('click',function(e){if(e.target===$('sheet'))closeSheet();});
-document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;if(!$('sheet').hidden)closeSheet();else if(focus)setFocus(false);});
+document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;if(!$('nsheet').hidden)closeNotes();else if(!$('sheet').hidden)closeSheet();else if(focus)setFocus(false);});
 $('lang').addEventListener('click',function(){
   S.lang=L()==='en'?'ms':'en';save();
   applyStatic();renderOwner();renderList();renderDetail();
