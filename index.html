@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nota Haji</title>
-<meta name="description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta name="description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta name="theme-color" content="#1F5E2B">
 <meta name="robots" content="noindex">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Nota Haji">
-<meta property="og:description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta property="og:description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta property="og:url" content="https://farawyadal.github.io/nota-haji/">
 <meta property="og:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Nota Haji">
-<meta name="twitter:description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta name="twitter:description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta name="twitter:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -210,7 +210,7 @@ addTab:'+ Tambah nota',openDrive:'Buka di Drive',remove:'Buang dari senarai',
 removeConfirm:function(l){return 'Buang "'+l+'" dari senarai? Fail dalam Drive tidak dipadam.';},
 emptyRemote:'Kalau kosong, minta pemilik semak perkongsian fail ni.',emptyLocal:'Kalau kosong, log masuk akaun Google yang simpan fail ni.',
 removeFail:'Gagal kemas kini senarai kongsi.',
-ownIn:'Log masuk pemilik (untuk upload)',ownOk:'Log masuk sebagai pemilik',shareBtn:'Salin pautan kongsi app',
+ownIn:'Log masuk pemilik (untuk upload)',ownOk:'Log masuk sebagai pemilik',shareBtn:'Kongsi app (mesej + pautan)',
 connecting:'Menyambung ke Google…',setupFolder:'Menyediakan folder Drive…',
 notOwner:function(o){return 'Akaun itu bukan pemilik app. Upload hanya untuk '+o+'.';},
 signFail:function(e){return 'Log masuk gagal: '+e;},unknown:'tidak diketahui',cancelled:'dibatalkan',
@@ -220,7 +220,7 @@ gsiFail:'Tak dapat muat Google Sign-In. Semak sambungan internet.',
 startFail:function(c){return 'Mula upload gagal ('+c+')';},noAddr:'Drive tak beri alamat upload',
 upFail:function(c){return 'Upload gagal ('+c+')';},
 failCap:function(e){return 'Gagal: '+e+'. Cuba log masuk pemilik semula.';},
-shareCopied:'Pautan kongsi disalin. Hantar kepada keluarga atau kawan.',sharePrompt:'Salin pautan ni dan hantar kepada keluarga/kawan:',
+shareCopied:'Mesej kongsi disalin. Tampal dalam WhatsApp dan hantar kepada keluarga atau kawan.',sharePrompt:'Salin mesej ni dan hantar kepada keluarga/kawan:',
 addFirst:'Tambah nota minggu ni',addMore:'Tambah nota lagi',nameField:'Nama fail',phLabel:'Cth. Bahagian A',part:'Bahagian ',fileDef:'Fail ',
 ownP:'Pilih PDF dari peranti ni. Nota disimpan dalam folder Drive ko dan boleh dibaca sesiapa yang ada pautan app. Upload hanya boleh dibuat oleh pemilik.',
 pdfField:'Fail PDF',uploadBtn:'Upload ke Drive',uploading:'Memuat naik…',orLink:'Atau tampal pautan Drive',
@@ -249,7 +249,7 @@ addTab:'+ Add note',openDrive:'Open in Drive',remove:'Remove from list',
 removeConfirm:function(l){return 'Remove "'+l+'" from the list? The file in Drive is not deleted.';},
 emptyRemote:'If it shows blank, ask the owner to check this file’s sharing.',emptyLocal:'If it shows blank, sign in to the Google account that holds this file.',
 removeFail:'Could not update the shared list.',
-ownIn:'Owner sign-in (to upload)',ownOk:'Signed in as owner',shareBtn:'Copy app share link',
+ownIn:'Owner sign-in (to upload)',ownOk:'Signed in as owner',shareBtn:'Share app (message + link)',
 connecting:'Connecting to Google…',setupFolder:'Setting up the Drive folder…',
 notOwner:function(o){return 'That account is not the app owner. Upload is only for '+o+'.';},
 signFail:function(e){return 'Sign-in failed: '+e;},unknown:'unknown',cancelled:'cancelled',
@@ -259,7 +259,7 @@ gsiFail:'Could not load Google Sign-In. Check your internet connection.',
 startFail:function(c){return 'Could not start upload ('+c+')';},noAddr:'Drive did not return an upload address',
 upFail:function(c){return 'Upload failed ('+c+')';},
 failCap:function(e){return 'Failed: '+e+'. Try signing in as owner again.';},
-shareCopied:'Share link copied. Send it to family or friends.',sharePrompt:'Copy this link and send it to family/friends:',
+shareCopied:'Share message copied. Paste it in WhatsApp and send it to family or friends.',sharePrompt:'Copy this message and send it to family/friends:',
 addFirst:'Add a note for this week',addMore:'Add another note',nameField:'File name',phLabel:'e.g. Part A',part:'Part ',fileDef:'File ',
 ownP:'Pick a PDF from this device. It is saved in your Drive folder and anyone with the app link can read it. Only the owner can upload.',
 pdfField:'PDF file',uploadBtn:'Upload to Drive',uploading:'Uploading…',orLink:'Or paste a Drive link',
@@ -466,10 +466,15 @@ function uploadPdf(file){
 function shareLink(){
   if(!S.indexId)return;
   var url=location.origin+location.pathname+'#/s/'+S.indexId;
-  function fb(){window.prompt(t('sharePrompt'),url);}
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(function(){msg=t('shareCopied');renderOwner();},fb);
-  }else fb();
+  var text='Assalamualaikum. Ini app Nota Haji untuk baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Tak perlu muat turun, tekan pautan ni dan pilih minggu:\n'+url+'\n\nDeveloped by FaridAssamani';
+  function fb(){window.prompt(t('sharePrompt'),text);}
+  function copy(){
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){msg=t('shareCopied');renderOwner();},fb);
+    }else fb();
+  }
+  if(navigator.share){navigator.share({text:text}).catch(function(e){if(!e||e.name!=='AbortError')copy();});}
+  else copy();
 }
 
 /* ---------- Paparan ---------- */
