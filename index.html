@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nota Haji</title>
-<meta name="description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
+<meta name="description" content="Baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta name="theme-color" content="#1F5E2B">
 <meta name="robots" content="noindex">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Nota Haji">
-<meta property="og:description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
+<meta property="og:description" content="Baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta property="og:url" content="https://farawyadal.github.io/nota-haji/">
 <meta property="og:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Nota Haji">
-<meta name="twitter:description" content="Baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
+<meta name="twitter:description" content="Baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Developed by FaridAssamani">
 <meta name="twitter:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -136,7 +136,7 @@ button{cursor:pointer}
     <div class="head">
       <div class="brand">
         <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.2 5.2 7.8 4.6 4.5 4.6v12.9c3.3 0 5.7.6 7.5 1.9 1.8-1.3 4.2-1.9 7.5-1.9V4.6c-3.3 0-5.7.6-7.5 1.9z"/><path d="M12 6.5v12.9"/></svg></div>
-        <div><h1>Nota Haji</h1><p id="sub">Kursus Haji 1Malaysia · 12 minggu</p></div>
+        <div><h1>Nota Haji</h1><p id="sub">Kursus Asas Haji 2026 · 12 minggu</p></div>
         <button type="button" class="langbtn" id="lang" aria-label="Language / Bahasa"></button>
       </div>
       <div class="prog">
@@ -196,7 +196,7 @@ try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.li
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
-sub:'Kursus Haji 1Malaysia · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
+sub:'Kursus Asas Haji 2026 · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
 settings:'Tetapan',close:'Tutup',
 setIntro:'Anda tidak perlu guna tetapan ini untuk membaca nota. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
@@ -235,7 +235,7 @@ restored:'Sandaran dipulihkan dan digabungkan.',badBackup:'Fail sandaran tak sah
 months:{}
 },
 en:{
-sub:'Kursus Haji 1Malaysia · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
+sub:'Kursus Asas Haji 2026 · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
 settings:'Settings',close:'Close',
 setIntro:'You do not need these settings to read the notes. They are only for saving or moving your "read" marks.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
@@ -466,7 +466,7 @@ function uploadPdf(file){
 function shareLink(){
   if(!S.indexId)return;
   var url=location.origin+location.pathname+'#/s/'+S.indexId;
-  var text='Assalamualaikum. Ini app Nota Haji untuk baca nota Kursus Haji 1Malaysia (12 minggu) terus di fon atau tablet. Tak perlu muat turun, tekan pautan ni dan pilih minggu:\n'+url+'\n\nDeveloped by FaridAssamani';
+  var text='Assalamualaikum. Ini app Nota Haji untuk baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Tak perlu muat turun, tekan pautan ni dan pilih minggu:\n'+url+'\n\nDeveloped by FaridAssamani';
   function fb(){window.prompt(t('sharePrompt'),text);}
   function copy(){
     if(navigator.clipboard&&navigator.clipboard.writeText){
