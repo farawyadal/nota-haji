@@ -62,8 +62,8 @@ button{cursor:pointer}
 .chip.now{background:#FDF0D5;color:#7A4A06}
 .chip.has{background:var(--soft);color:var(--g);border:1px solid #C3D0BF}
 .foot{padding:10px 20px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #E3EBDF;display:flex;flex-direction:column;gap:8px}
-.foot .tools{display:flex;gap:8px}
-.foot .tools button,.ownbtn{flex:1;min-height:44px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:12px;font-weight:600}
+.foot .tools{display:flex;gap:8px;flex-wrap:wrap}
+.foot .tools button,.ownbtn{flex:1 1 40%;min-height:44px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:12px;font-weight:600}
 .ownbtn{width:100%}
 .own{display:flex;flex-direction:column;gap:6px}
 .note{font-size:12px;color:var(--mut);line-height:1.4}
@@ -140,6 +140,9 @@ button{cursor:pointer}
       <div class="tools">
         <button type="button" id="exp">Salin kod pindah</button>
         <button type="button" id="imp">Tampal kod pindah</button>
+        <button type="button" id="dl">Muat turun sandaran</button>
+        <button type="button" id="up">Muat naik sandaran</button>
+        <input type="file" id="upf" accept=".json,application/json" hidden>
       </div>
       <small>Developed by FaridAssamani</small>
     </div>
@@ -552,23 +555,45 @@ $('exp').addEventListener('click',function(){
     navigator.clipboard.writeText(code).then(function(){alert('Kod disalin. Tampal di peranti lain guna "Tampal kod pindah".');},fallback);
   }else fallback();
 });
+function applyBackup(o){
+  if(!o||typeof o.links!=='object')throw new Error('x');
+  Object.keys(o.links).forEach(function(k){
+    var cur=localLinks(k);
+    (o.links[k]||[]).forEach(function(l){
+      if(l&&l.id&&!cur.some(function(c){return c.id===l.id;}))cur.push({label:String(l.label||'Fail'),id:String(l.id)});
+    });
+  });
+  Object.keys(o.done||{}).forEach(function(k){S.done[k]=true;});
+  if(o.indexId&&!S.indexId){S.indexId=String(o.indexId);}
+  save();route();loadRemote();
+}
 $('imp').addEventListener('click',function(){
   var code=window.prompt('Tampal kod pindah dari peranti lain:');
   if(!code)return;
   try{
-    var o=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-    if(!o||typeof o.links!=='object')throw new Error('x');
-    Object.keys(o.links).forEach(function(k){
-      var cur=localLinks(k);
-      (o.links[k]||[]).forEach(function(l){
-        if(l&&l.id&&!cur.some(function(c){return c.id===l.id;}))cur.push({label:String(l.label||'Fail'),id:String(l.id)});
-      });
-    });
-    Object.keys(o.done||{}).forEach(function(k){S.done[k]=true;});
-    if(o.indexId&&!S.indexId){S.indexId=String(o.indexId);}
-    save();route();loadRemote();
+    applyBackup(JSON.parse(decodeURIComponent(escape(atob(code.trim())))));
     alert('Siap digabungkan.');
   }catch(e){alert('Kod tak sah. Salin semula dari peranti lain.');}
+});
+$('dl').addEventListener('click',function(){
+  var d=new Date(),pad=function(x){return (x<10?'0':'')+x;};
+  var name='nota-haji-sandaran-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'.json';
+  var blob=new Blob([JSON.stringify({app:'nota-haji',links:S.links,done:S.done,indexId:S.indexId},null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+});
+$('up').addEventListener('click',function(){$('upf').value='';$('upf').click();});
+$('upf').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{applyBackup(JSON.parse(r.result));alert('Sandaran dipulihkan dan digabungkan.');}
+    catch(err){alert('Fail sandaran tak sah.');}
+  };
+  r.readAsText(f);
 });
 
 renderOwner();
