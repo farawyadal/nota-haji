@@ -498,7 +498,7 @@ function uploadPdf(file){
 function shareLink(){
   if(!S.indexId)return;
   var url=location.origin+location.pathname+'#/s/'+S.indexId;
-  var text='Assalamualaikum. Ini app Nota Haji untuk baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Tak perlu muat turun, tekan pautan ni dan pilih minggu:\n'+url+'\n\nDeveloped by FaridAssamani';
+  var text='Assalamualaikum. Ini app Nota Haji untuk baca nota Kursus Asas Haji 2026 (12 minggu) terus di fon atau tablet. Boleh muat turun. Tekan pautan ni dan boleh pilih nota mengikut minggu:\n'+url+'\n\nSemoga bermanfaat pada semua.';
   function fb(){window.prompt(t('sharePrompt'),text);}
   function copy(){
     if(navigator.clipboard&&navigator.clipboard.writeText){
