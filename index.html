@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nota Haji</title>
+<meta name="description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta name="theme-color" content="#1F5E2B">
+<meta name="robots" content="noindex">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nota Haji">
+<meta property="og:description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta property="og:url" content="https://farawyadal.github.io/nota-haji/">
+<meta property="og:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nota Haji">
+<meta name="twitter:description" content="Nota kursus haji, 12 minggu, baca terus dari Google Drive. Developed by FaridAssamani">
+<meta name="twitter:image" content="https://farawyadal.github.io/nota-haji/og-image.png">
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1F5E2B;--ink:#17261B;--mut:#55655A;--line:#D5DFD2;--bg:#EAEFE7;--card:#fff;--tint:#E1F0DB;--soft:#F1F5EE;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{display:flex;height:100vh;height:100dvh}
+.list{width:420px;flex-shrink:0;background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.detail{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+.head{padding:24px 24px 14px;display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:46px;height:46px;border-radius:13px;background:var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand h1{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.01em}
+.brand p{margin:2px 0 0;font-size:13px;color:var(--mut)}
+.prog{display:flex;flex-direction:column;gap:8px}
+.prog-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+.prog-top b{color:var(--g)}
+.bar{height:8px;border-radius:4px;background:#E3EBDF;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--g);border-radius:4px;transition:width .3s}
+.search{display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line)}
+.search input{flex:1;min-width:0;border:0;background:transparent;outline:none;font-size:14px}
+.search:focus-within{border-color:var(--g)}
+.rows{flex:1;min-height:0;overflow-y:auto;padding:4px 14px 8px;display:flex;flex-direction:column;gap:6px}
+.row{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border-radius:12px;border:1px solid transparent;background:var(--card);text-align:left;width:100%}
+.row:hover{background:var(--soft)}
+.row.sel{background:#EAF3E5;border-color:#9CC48F}
+.num{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:#EEF1EC;color:var(--mut)}
+.sel .num,.row.nowr .num{background:var(--g);color:#fff}
+.row.done .num{background:var(--tint);color:var(--g)}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.rt b{font-size:14px;font-weight:600;line-height:1.25}
+.rt span{font-size:12px;color:var(--mut)}
+.chip{flex-shrink:0;font-size:12px;font-weight:600;padding:4px 10px;border-radius:10px;background:#EEF1EC;color:var(--mut)}
+.chip.done{background:#E1F0DB;color:var(--g)}
+.chip.now{background:#FDF0D5;color:#7A4A06}
+.chip.has{background:var(--soft);color:var(--g);border:1px solid #C3D0BF}
+.foot{padding:10px 20px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #E3EBDF;display:flex;flex-direction:column;gap:8px}
+.foot .tools{display:flex;gap:8px}
+.foot .tools button,.ownbtn{flex:1;min-height:44px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:12px;font-weight:600}
+.ownbtn{width:100%}
+.own{display:flex;flex-direction:column;gap:6px}
+.note{font-size:12px;color:var(--mut);line-height:1.4}
+.note.ok{color:var(--g);font-weight:600}
+.foot small{font-size:12px;color:var(--mut);text-align:center}
+.top{background:var(--card);border-bottom:1px solid var(--line);padding:20px 28px 16px;display:flex;align-items:center;gap:16px}
+.top .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g)}
+.top h2{margin:0;font-size:24px;letter-spacing:-.01em;line-height:1.2}
+.top p{margin:0;font-size:14px;color:var(--mut)}
+.icon-btn{width:48px;height:48px;border-radius:14px;border:1px solid #C3D0BF;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.back{display:none;border:0;background:transparent;border-radius:24px}
+.primary{height:48px;padding:0 20px;border-radius:14px;border:0;background:var(--g);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.primary.off{background:#fff;color:var(--g);border:1px solid var(--g)}
+.primary[disabled]{opacity:.6;cursor:default}
+.tabs{padding:14px 28px 0;display:flex;gap:8px;flex-wrap:wrap}
+.tab{height:44px;padding:0 18px;border-radius:22px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
+.tab.on{background:var(--g);border-color:var(--g);color:#fff}
+.tab.add{border-style:dashed;color:var(--g)}
+.stage{flex:1;min-height:0;padding:16px 28px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.frame{flex:1;min-height:0;border:1px solid #C3D0BF;border-radius:14px;background:#fff;width:100%}
+.stage-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+.stage-bar a,.stage-bar button{height:44px;padding:0 14px;border-radius:12px;border:1px solid #C3D0BF;background:#fff;font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;display:flex;align-items:center}
+.stage-bar .danger{color:#9A2A2A}
+.card{max-width:560px;margin:auto;width:100%;background:#fff;border:1px solid #C3D0BF;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.card h3{margin:0;font-size:18px}
+.card h4{margin:6px 0 0;font-size:14px}
+.card p{margin:0;font-size:14px;color:var(--mut);line-height:1.5}
+.card hr{border:0;border-top:1px solid #E3EBDF;margin:2px 0;width:100%}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.field input{height:48px;border-radius:12px;border:1px solid #C3D0BF;padding:0 14px;font-size:14px;font-weight:400;background:#fff}
+.field input[type=file]{padding:10px 14px;height:auto}
+.field input:focus{outline:2px solid var(--g);outline-offset:1px}
+.err{font-size:13px;color:#9A2A2A;min-height:18px}
+.bottom{display:none;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+.bottom .primary{width:100%;height:52px}
+@media (max-width:899px){
+  .list{width:100%;border-right:0}
+  .app:not(.show-detail) .detail{display:none}
+  .app.show-detail .list{display:none}
+  .back{display:flex}
+  .top{padding:12px 8px 12px 4px;gap:4px}
+  .top h2{font-size:18px}
+  .top p{display:none}
+  .top .primary{display:none}
+  .icon-btn{border:0;background:transparent}
+  .tabs{padding:12px 16px 0}
+  .tab{height:44px;padding:0 14px;font-size:13px}
+  .stage{padding:12px 16px}
+  .bottom{display:block}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="list">
+    <div class="head">
+      <div class="brand">
+        <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.2 5.2 7.8 4.6 4.5 4.6v12.9c3.3 0 5.7.6 7.5 1.9 1.8-1.3 4.2-1.9 7.5-1.9V4.6c-3.3 0-5.7.6-7.5 1.9z"/><path d="M12 6.5v12.9"/></svg></div>
+        <div><h1>Nota Haji</h1><p>Kursus Haji 1Malaysia · 12 minggu</p></div>
+      </div>
+      <div class="prog">
+        <div class="prog-top"><span>Kemajuan bacaan</span><b id="progText">0 / 12 minggu</b></div>
+        <div class="bar"><i id="progBar" style="width:0%"></i></div>
+      </div>
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#55655A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <input id="q" type="search" placeholder="Cari tajuk minggu, cth. dam atau umrah" aria-label="Cari tajuk minggu" autocomplete="off">
+      </label>
+    </div>
+    <div class="rows" id="rows"></div>
+    <div class="foot">
+      <div class="own" id="own"></div>
+      <div class="tools">
+        <button type="button" id="exp">Salin kod pindah</button>
+        <button type="button" id="imp">Tampal kod pindah</button>
+      </div>
+      <small>Developed by FaridAssamani</small>
+    </div>
+  </aside>
+  <main class="detail" id="detail"></main>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+'use strict';
+var CFG=window.NH_CONFIG||{};
+var OWNER=String(CFG.OWNER_EMAIL||'').toLowerCase();
+var WEEKS=[
+{n:1,s:'Sejarah & Pengenalan Tanah Suci',f:'Sejarah dan Pengenalan Tanah Suci Makkah dan Madinah',p:'1–26',d:'27 Sep'},
+{n:2,s:'Falsafah & Penyucian Jiwa',f:'Falsafah dan Penyucian Jiwa: Pengenalan Ringkas Ibadat Haji dan Umrah',p:'27–48',d:'4 Okt'},
+{n:3,s:'Rukun Haji: Ihram, Wuquf, Tawaf',f:'Rukun Haji: Niat Ihram, Wuquf dan Tawaf',p:'49–70',d:'18 Okt'},
+{n:4,s:'Rukun Haji: Sa’ie, Bercukur, Tertib',f:'Rukun Haji: Sa’ie, Bercukur/Bergunting dan Tertib pada Kebanyakan Rukun',p:'71–88',d:'25 Okt'},
+{n:5,s:'Wajib-wajib Haji',f:'Wajib-wajib Haji: Niat di Miqat, Larangan dalam Ihram, Dam & Mabit di Muzdalifah',p:'89–110',d:'1 Nov'},
+{n:6,s:'Melontar, Mabit di Mina & Nafar',f:'Wajib-wajib Haji: Melontar di Jamrah Kubra 10 Zulhijjah, Mabit di Mina dan Melontar pada Hari-hari Tasyriq dan Nafar',p:'111–130',d:''},
+{n:7,s:'Jenis Haji & Cara Mengerjakan',f:'Jenis Haji dan Cara-cara Mengerjakan Haji',p:'131–142',d:''},
+{n:8,s:'Aurat, Izin Suami, Taharah & Solat',f:'Aurat, Izin Suami, Taharah dan Solat',p:'143–180',d:''},
+{n:9,s:'Fiqh Wanita dalam Ibadat Haji',f:'Fiqh Wanita dalam Ibadat Haji',p:'181–210',d:''},
+{n:10,s:'Umrah, Niat Bersyarat, Tawaf Wada’',f:'Ibadat Umrah, Niat Bersyarat dan Tawaf Wada’',p:'211–242',d:''},
+{n:11,s:'Kesihatan',f:'Kesihatan',p:'243–262',d:'11 Okt'},
+{n:12,s:'Pengurusan Haji: Taklimat',f:'Pengurusan Haji: Taklimat Pengurusan',p:'263–284',d:''}
+];
+var KEY='notahaji.v1';
+var S={links:{},done:{},last:null,indexId:null};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+var remote={links:{}};          // indeks nota dari Drive (dikongsi pemilik)
+var token=null,tokenExp=0,tc=null;
+var owner=false,folderId=null,busy=false,msg='';
+var sel=null,active=0,adding=false,query='';
+var wide=window.matchMedia('(min-width:900px)');
+var $=function(id){return document.getElementById(id);};
+
+function h(tag,props){
+  var el=document.createElement(tag);
+  props=props||{};
+  Object.keys(props).forEach(function(k){
+    var v=props[k];
+    if(k==='class')el.className=v;
+    else if(k==='text')el.textContent=v;
+    else if(k.indexOf('on')===0)el.addEventListener(k.slice(2),v);
+    else if(v!==false&&v!==null&&v!==undefined)el.setAttribute(k,v===true?'':v);
+  });
+  for(var i=2;i<arguments.length;i++){
+    var c=arguments[i];
+    if(c===null||c===undefined||c===false)continue;
+    el.appendChild(typeof c==='string'?document.createTextNode(c):c);
+  }
+  return el;
+}
+function svg(inner,size){
+  var w=document.createElement('span');
+  w.style.display='inline-flex';
+  w.innerHTML='<svg width="'+(size||22)+'" height="'+(size||22)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';
+  return w;
+}
+var ICON={
+  back:'<path d="M14.5 6l-6 6 6 6"/>',
+  dl:'<path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/>',
+  ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+};
+function driveId(u){
+  var m=u.match(/\/file\/d\/([\w-]{10,})/)||u.match(/[?&]id=([\w-]{10,})/)||u.match(/\/d\/([\w-]{10,})/);
+  return m?m[1]:null;
+}
+function getWeek(n){for(var i=0;i<WEEKS.length;i++)if(WEEKS[i].n===n)return WEEKS[i];return null;}
+function localLinks(n){return S.links[n]||(S.links[n]=[]);}
+function remoteLinks(n){return remote.links[n]||(remote.links[n]=[]);}
+function linksOf(n){
+  var out=[],seen={};
+  (remote.links[n]||[]).forEach(function(l){seen[l.id]=1;out.push({label:l.label,id:l.id,remote:true});});
+  (S.links[n]||[]).forEach(function(l){if(!seen[l.id])out.push({label:l.label,id:l.id,remote:false});});
+  return out;
+}
+function statusOf(n){
+  if(S.done[n])return['Dibaca','done'];
+  if(S.last===n)return['Sedang dibaca','now'];
+  if(linksOf(n).length)return['Ada nota','has'];
+  return['Belum ada',''];
+}
+function normIndex(j){
+  var out={links:{}};
+  if(j&&typeof j.links==='object'){
+    Object.keys(j.links).forEach(function(k){
+      var a=j.links[k];
+      if(Array.isArray(a))out.links[k]=a.filter(function(l){return l&&l.id;}).map(function(l){return{label:String(l.label||'Fail'),id:String(l.id)};});
+    });
+  }
+  return out;
+}
+
+/* ---------- Drive: baca indeks (penonton guna API key, pemilik guna token) ---------- */
+function loadRemote(){
+  if(!S.indexId)return Promise.resolve();
+  var url='https://www.googleapis.com/drive/v3/files/'+S.indexId+'?alt=media';
+  var req;
+  if(token){req=fetch(url,{cache:'no-store',headers:{Authorization:'Bearer '+token}});}
+  else if(CFG.API_KEY){req=fetch(url+'&key='+encodeURIComponent(CFG.API_KEY),{cache:'no-store'});}
+  else return Promise.resolve();
+  return req.then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(j){remote=normIndex(j);renderList();renderDetail();})
+    .catch(function(){msg='Tak dapat muat senarai nota dikongsi. Semak sambungan atau pautan kongsi.';renderOwner();});
+}
+
+/* ---------- Log masuk Google (pemilik sahaja) ---------- */
+function loadGsi(cb){
+  if(window.google&&google.accounts&&google.accounts.oauth2)return cb();
+  var s=document.createElement('script');
+  s.src='https://accounts.google.com/gsi/client';
+  s.onload=cb;
+  s.onerror=function(){msg='Tak dapat muat Google Sign-In. Semak sambungan internet.';renderOwner();};
+  document.head.appendChild(s);
+}
+function getToken(interactive){
+  return new Promise(function(res,rej){
+    if(token&&Date.now()<tokenExp-60000)return res(token);
+    if(!CFG.CLIENT_ID)return rej(new Error('CLIENT_ID belum diisi dalam config.js'));
+    loadGsi(function(){
+      if(!tc){
+        tc=google.accounts.oauth2.initTokenClient({
+          client_id:CFG.CLIENT_ID,
+          scope:'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email',
+          callback:function(r){
+            if(r.error){tc._rej(new Error(r.error));return;}
+            token=r.access_token;tokenExp=Date.now()+(r.expires_in||3600)*1000;tc._res(token);
+          },
+          error_callback:function(e){tc._rej(new Error((e&&e.type)||'dibatalkan'));}
+        });
+      }
+      tc._res=res;tc._rej=rej;
+      tc.requestAccessToken({prompt:interactive?'select_account':''});
+    });
+  });
+}
+function gfetch(url,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({Authorization:'Bearer '+token},opts.headers||{});
+  return fetch(url,opts).then(function(r){
+    if(!r.ok)throw new Error('Drive '+r.status);
+    return r.json();
+  });
+}
+function findOne(q){
+  return gfetch('https://www.googleapis.com/drive/v3/files?spaces=drive&fields=files(id,name)&q='+encodeURIComponent(q))
+    .then(function(j){return(j.files&&j.files[0])||null;});
+}
+function makePublic(id){
+  return gfetch('https://www.googleapis.com/drive/v3/files/'+id+'/permissions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'reader',type:'anyone'})});
+}
+function createIndexFile(){
+  var b='nh'+Date.now();
+  var body='--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify({name:'nota-haji-index.json',parents:[folderId],mimeType:'application/json'})+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+JSON.stringify({v:1,links:{}})+'\r\n--'+b+'--';
+  return gfetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+b},body:body})
+    .then(function(f){return makePublic(f.id).then(function(){return f;});});
+}
+function ensureSetup(){
+  return findOne("name='Nota Haji (app)' and mimeType='application/vnd.google-apps.folder' and trashed=false").then(function(f){
+    if(f)return f;
+    return gfetch('https://www.googleapis.com/drive/v3/files?fields=id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Nota Haji (app)',mimeType:'application/vnd.google-apps.folder'})});
+  }).then(function(f){
+    folderId=f.id;
+    return findOne("name='nota-haji-index.json' and trashed=false");
+  }).then(function(ix){
+    return ix||createIndexFile();
+  }).then(function(ix){
+    S.indexId=ix.id;save();
+    return loadRemote();
+  });
+}
+function pushIndex(){
+  return gfetch('https://www.googleapis.com/upload/drive/v3/files/'+S.indexId+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({v:1,links:remote.links})});
+}
+function signIn(){
+  msg='Menyambung ke Google…';renderOwner();
+  getToken(true).then(function(t){
+    return fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+t}}).then(function(r){return r.json();});
+  }).then(function(u){
+    if(!u.email||u.email.toLowerCase()!==OWNER){
+      try{google.accounts.oauth2.revoke(token,function(){});}catch(e){}
+      token=null;owner=false;
+      msg='Akaun itu bukan pemilik app. Upload hanya untuk '+OWNER+'.';
+      renderOwner();renderDetail();
+      return null;
+    }
+    owner=true;msg='Menyediakan folder Drive…';renderOwner();
+    return ensureSetup().then(function(){msg='';renderOwner();renderList();renderDetail();});
+  }).catch(function(e){
+    owner=false;token=null;
+    msg='Log masuk gagal: '+(e&&e.message?e.message:'tidak diketahui');
+    renderOwner();
+  });
+}
+function uploadPdf(file){
+  return getToken(false).then(function(t){
+    return fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id',{
+      method:'POST',
+      headers:{Authorization:'Bearer '+t,'Content-Type':'application/json; charset=UTF-8','X-Upload-Content-Type':'application/pdf'},
+      body:JSON.stringify({name:file.name,parents:[folderId],mimeType:'application/pdf'})
+    });
+  }).then(function(r){
+    if(!r.ok)throw new Error('Mula upload gagal ('+r.status+')');
+    var loc=r.headers.get('Location');
+    if(!loc)throw new Error('Drive tak beri alamat upload');
+    return fetch(loc,{method:'PUT',headers:{'Content-Type':'application/pdf'},body:file});
+  }).then(function(r){
+    if(!r.ok)throw new Error('Upload gagal ('+r.status+')');
+    return r.json();
+  }).then(function(f){
+    return makePublic(f.id).then(function(){return f;});
+  });
+}
+function shareLink(){
+  if(!S.indexId)return;
+  var url=location.origin+location.pathname+'#/s/'+S.indexId;
+  function fb(){window.prompt('Salin pautan ni dan hantar kepada keluarga/kawan:',url);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){msg='Pautan kongsi disalin. Hantar kepada keluarga atau kawan.';renderOwner();},fb);
+  }else fb();
+}
+
+/* ---------- Paparan ---------- */
+function renderOwner(){
+  var box=$('own');
+  box.textContent='';
+  if(!CFG.CLIENT_ID){return;}
+  if(!owner){
+    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:signIn,text:'Log masuk pemilik (untuk upload)'}));
+  }else{
+    box.appendChild(h('div',{class:'note ok',text:'Log masuk sebagai pemilik'}));
+    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:shareLink,text:'Salin pautan kongsi app'}));
+  }
+  if(msg)box.appendChild(h('div',{class:'note',role:'status',text:msg}));
+}
+
+function renderList(){
+  var done=WEEKS.filter(function(w){return S.done[w.n];}).length;
+  $('progText').textContent=done+' / 12 minggu';
+  $('progBar').style.width=Math.round(done/12*100)+'%';
+  var q=query.trim().toLowerCase();
+  var rows=$('rows');
+  rows.textContent='';
+  var shown=WEEKS.filter(function(w){return !q||(w.f+' '+w.s+' minggu '+w.n).toLowerCase().indexOf(q)>-1;});
+  if(!shown.length){rows.appendChild(h('p',{class:'err',style:'padding:12px',text:'Tiada tajuk padan.'}));return;}
+  shown.forEach(function(w){
+    var st=statusOf(w.n);
+    var cls='row'+(sel===w.n&&wide.matches?' sel':'')+(S.done[w.n]?' done':'')+(S.last===w.n&&!S.done[w.n]?' nowr':'');
+    rows.appendChild(h('button',{type:'button',class:cls,onclick:function(){go(w.n);}},
+      h('div',{class:'num',text:String(w.n)}),
+      h('div',{class:'rt'},h('b',{text:w.s}),h('span',{text:'Muka '+w.p+(w.d?' · '+w.d:'')})),
+      h('div',{class:'chip '+st[1],text:st[0]})
+    ));
+  });
+}
+
+function markBtn(n,extra){
+  var d=!!S.done[n];
+  return h('button',{type:'button',class:'primary'+(d?' off':'')+(extra?' '+extra:''),onclick:function(){
+    if(S.done[n])delete S.done[n];else S.done[n]=true;
+    save();renderList();renderDetail();
+  }},svg(ICON.ok,18),d?'Batal tanda dibaca':'Tanda dah baca');
+}
+
+function renderDetail(){
+  var box=$('detail');
+  box.textContent='';
+  if(sel===null)return;
+  var w=getWeek(sel),links=linksOf(sel);
+  if(active>=links.length)active=Math.max(0,links.length-1);
+  var cur=links[active];
+
+  box.appendChild(h('div',{class:'top'},
+    h('button',{type:'button',class:'icon-btn back','aria-label':'Kembali ke senarai',onclick:function(){go(null);}},svg(ICON.back,24)),
+    h('div',{class:'t'},
+      h('div',{class:'eyebrow',text:'Minggu '+w.n+(w.d?' · Kelas '+w.d:'')}),
+      h('h2',{text:w.s}),
+      h('p',{text:w.f})
+    ),
+    cur?h('a',{class:'icon-btn',href:'https://drive.google.com/uc?export=download&id='+cur.id,target:'_blank',rel:'noopener','aria-label':'Muat turun PDF',style:'text-decoration:none;color:inherit'},svg(ICON.dl)):null,
+    markBtn(w.n)
+  ));
+
+  var tabs=h('div',{class:'tabs'});
+  links.forEach(function(l,i){
+    tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;renderDetail();}},l.label));
+  });
+  if(links.length)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},'+ Tambah nota'));
+  if(links.length)box.appendChild(tabs);
+
+  var stage=h('div',{class:'stage'});
+  if(!links.length||adding){
+    stage.appendChild(addCard(links.length===0));
+  }else{
+    stage.appendChild(h('iframe',{class:'frame',src:'https://drive.google.com/file/d/'+cur.id+'/preview',title:cur.label,allow:'fullscreen',loading:'lazy'}));
+    var bar=h('div',{class:'stage-bar'},
+      h('a',{href:'https://drive.google.com/file/d/'+cur.id+'/view',target:'_blank',rel:'noopener',text:'Buka di Drive'})
+    );
+    if(!cur.remote||owner){
+      bar.appendChild(h('button',{type:'button',class:'danger',onclick:function(){
+        if(!confirm('Buang "'+cur.label+'" dari senarai? Fail dalam Drive tidak dipadam.'))return;
+        if(cur.remote){
+          var a=remoteLinks(sel);
+          for(var i=0;i<a.length;i++){if(a[i].id===cur.id){a.splice(i,1);break;}}
+          pushIndex().catch(function(){msg='Gagal kemas kini senarai kongsi.';renderOwner();});
+        }
+        var b=localLinks(sel);
+        for(var j=0;j<b.length;j++){if(b[j].id===cur.id){b.splice(j,1);break;}}
+        active=0;save();renderList();renderDetail();
+      }},'Buang dari senarai'));
+    }
+    bar.appendChild(h('span',{text:cur.remote?'Kalau kosong, minta pemilik semak perkongsian fail ni.':'Kalau kosong, log masuk akaun Google yang simpan fail ni.'}));
+    stage.appendChild(bar);
+  }
+  box.appendChild(stage);
+  box.appendChild(h('div',{class:'bottom'},markBtn(w.n)));
+}
+
+function addCard(first){
+  var link=h('input',{type:'url',id:'lnk',placeholder:'https://drive.google.com/file/d/…',autocomplete:'off'});
+  var lab=h('input',{type:'text',id:'lab',placeholder:'Cth. Bahagian A',autocomplete:'off',value:'Bahagian '+String.fromCharCode(65+linksOf(sel).length)});
+  var err=h('div',{class:'err',role:'alert'});
+  var fileIn=h('input',{type:'file',id:'pdf',accept:'application/pdf,.pdf'});
+  var upBtn=h('button',{type:'button',class:'primary',text:'Upload ke Drive'});
+
+  function addLocal(){
+    var v=link.value.trim();
+    if(/\/folders\//.test(v)){err.textContent='Itu pautan folder. Guna pautan fail PDF (Kongsi, Salin pautan).';return;}
+    var id=driveId(v);
+    if(!id){err.textContent='Pautan tak dikenali. Tampal pautan fail Google Drive.';return;}
+    var l=localLinks(sel);
+    l.push({label:lab.value.trim()||('Fail '+(l.length+1)),id:id});
+    active=linksOf(sel).length-1;adding=false;S.last=sel;
+    save();renderList();renderDetail();
+  }
+  function doUpload(){
+    var f=fileIn.files&&fileIn.files[0];
+    if(!f){err.textContent='Pilih fail PDF dulu.';return;}
+    if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf'){err.textContent='Fail mesti PDF.';return;}
+    if(busy)return;
+    busy=true;upBtn.disabled=true;upBtn.textContent='Memuat naik…';err.textContent='';
+    var label=lab.value.trim()||f.name.replace(/\.pdf$/i,'');
+    var wk=sel;
+    uploadPdf(f).then(function(r){
+      remoteLinks(wk).push({label:label,id:r.id});
+      return pushIndex().then(function(){
+        busy=false;active=linksOf(wk).length-1;adding=false;S.last=wk;save();renderList();renderDetail();
+      });
+    }).catch(function(e){
+      busy=false;upBtn.disabled=false;upBtn.textContent='Upload ke Drive';
+      err.textContent='Gagal: '+(e&&e.message?e.message:'tidak diketahui')+'. Cuba log masuk pemilik semula.';
+    });
+  }
+  upBtn.addEventListener('click',doUpload);
+
+  var card=h('div',{class:'card'},h('h3',{text:first?'Tambah nota minggu ni':'Tambah nota lagi'}));
+  card.appendChild(h('label',{class:'field'},'Nama fail',lab));
+  if(owner){
+    card.appendChild(h('p',{text:'Pilih PDF dari peranti ni. Nota disimpan dalam folder Drive ko dan boleh dibaca sesiapa yang ada pautan app. Upload hanya boleh dibuat oleh pemilik.'}));
+    card.appendChild(h('label',{class:'field'},'Fail PDF',fileIn));
+    card.appendChild(upBtn);
+    card.appendChild(h('hr'));
+    card.appendChild(h('h4',{text:'Atau tampal pautan Drive'}));
+  }else{
+    card.appendChild(h('p',{text:'Dalam Google Drive, buka PDF, tekan Kongsi, Salin pautan, kemudian tampal di sini. Nota kekal dalam Drive, bukan dalam app.'+(CFG.CLIENT_ID?' Upload terus dari app hanya untuk pemilik (log masuk pemilik di senarai).':'')}));
+  }
+  card.appendChild(h('label',{class:'field'},'Pautan Drive',link));
+  card.appendChild(err);
+  card.appendChild(h('button',{type:'button',class:owner?'tab':'primary',onclick:addLocal},'Simpan pautan'));
+  if(!first)card.appendChild(h('button',{type:'button',class:'tab',onclick:function(){adding=false;renderDetail();}},'Batal'));
+  return card;
+}
+
+/* ---------- Laluan ---------- */
+function go(n){
+  if(n===null){history.pushState(null,'',location.pathname);}
+  else{history.pushState(null,'','#/minggu/'+n);}
+  route();
+}
+function route(){
+  var sm=location.hash.match(/^#\/s\/([\w-]{10,})/);
+  if(sm){
+    S.indexId=sm[1];save();
+    history.replaceState(null,'',location.pathname);
+    loadRemote();
+  }
+  var m=location.hash.match(/^#\/minggu\/(\d+)/);
+  var n=m?parseInt(m[1],10):null;
+  if(n!==null&&!getWeek(n))n=null;
+  if(n===null&&wide.matches)n=S.last&&getWeek(S.last)?S.last:1;
+  if(n!==sel){sel=n;active=0;adding=false;}
+  if(sel!==null&&!S.done[sel]&&linksOf(sel).length){S.last=sel;save();}
+  $('app').classList.toggle('show-detail',sel!==null);
+  renderList();renderDetail();
+}
+window.addEventListener('popstate',route);
+window.addEventListener('hashchange',route);
+if(wide.addEventListener)wide.addEventListener('change',route);
+
+$('q').addEventListener('input',function(e){query=e.target.value;renderList();});
+
+$('exp').addEventListener('click',function(){
+  var code=btoa(unescape(encodeURIComponent(JSON.stringify({links:S.links,done:S.done,indexId:S.indexId}))));
+  function fallback(){window.prompt('Salin kod ni, tampal kat peranti lain:',code);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(function(){alert('Kod disalin. Tampal di peranti lain guna "Tampal kod pindah".');},fallback);
+  }else fallback();
+});
+$('imp').addEventListener('click',function(){
+  var code=window.prompt('Tampal kod pindah dari peranti lain:');
+  if(!code)return;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    if(!o||typeof o.links!=='object')throw new Error('x');
+    Object.keys(o.links).forEach(function(k){
+      var cur=localLinks(k);
+      (o.links[k]||[]).forEach(function(l){
+        if(l&&l.id&&!cur.some(function(c){return c.id===l.id;}))cur.push({label:String(l.label||'Fail'),id:String(l.id)});
+      });
+    });
+    Object.keys(o.done||{}).forEach(function(k){S.done[k]=true;});
+    if(o.indexId&&!S.indexId){S.indexId=String(o.indexId);}
+    save();route();loadRemote();
+    alert('Siap digabungkan.');
+  }catch(e){alert('Kod tak sah. Salin semula dari peranti lain.');}
+});
+
+renderOwner();
+route();
+loadRemote();
+})();
+</script>
+</body>
+</html>
