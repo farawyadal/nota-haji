@@ -92,11 +92,14 @@ button{cursor:pointer}
 .primary{height:48px;padding:0 20px;border-radius:14px;border:0;background:var(--g);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
 .primary.off{background:#fff;color:var(--g);border:1px solid var(--g)}
 .primary[disabled]{opacity:.6;cursor:default}
-.tabs{padding:14px 28px 0;display:flex;gap:8px;flex-wrap:wrap}
+.tabs{padding:12px 28px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tabs .sp{flex:1}
+.tabs .primary{height:44px;padding:0 16px}
+.empty{margin:auto;max-width:420px;text-align:center;color:var(--mut);font-size:15px;line-height:1.5;padding:24px}
 .tab{height:44px;padding:0 18px;border-radius:22px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
 .tab.on{background:var(--g);border-color:var(--g);color:#fff}
 .tab.add{border-style:dashed;color:var(--g)}
-.stage{flex:1;min-height:0;padding:16px 28px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.stage{flex:1;min-height:0;padding:12px 28px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
 .frame{flex:1;min-height:0;border:1px solid #C3D0BF;border-radius:14px;background:#fff;width:100%}
 .stage-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mut)}
 .stage-bar a,.stage-bar button{height:44px;padding:0 14px;border-radius:12px;border:1px solid #C3D0BF;background:#fff;font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;display:flex;align-items:center}
@@ -111,9 +114,16 @@ button{cursor:pointer}
 .field input[type=file]{padding:10px 14px;height:auto}
 .field input:focus{outline:2px solid var(--g);outline-offset:1px}
 .err{font-size:13px;color:#9A2A2A;min-height:18px}
-.bottom{display:none;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
-.bottom .primary{width:100%;height:52px}
-@media (max-width:899px){
+/* focus mode: hide all menus, note fills the screen */
+.fx{position:fixed;top:calc(8px + env(safe-area-inset-top));left:8px;z-index:15;display:none;gap:6px}
+.fx button{min-width:44px;height:44px;border-radius:22px;border:0;background:rgba(23,38,27,.75);color:#fff;font-size:14px;font-weight:600;padding:0 14px;display:flex;align-items:center;gap:6px}
+.fx button.on{background:var(--g)}
+.app.focus .list,.app.focus .top,.app.focus .tabs,.app.focus .stage-bar{display:none!important}
+.app.focus .detail{display:flex!important}
+.app.focus .stage{padding:0}
+.app.focus .frame{border:0;border-radius:0}
+.app.focus .fx{display:flex}
+@media (max-width:899px), (max-height:559px){
   .list{width:100%;border-right:0}
   .app:not(.show-detail) .detail{display:none}
   .app.show-detail .list{display:none}
@@ -125,8 +135,16 @@ button{cursor:pointer}
   .icon-btn{border:0;background:transparent}
   .tabs{padding:12px 16px 0}
   .tab{height:44px;padding:0 14px;font-size:13px}
-  .stage{padding:12px 16px}
-  .bottom{display:block}
+  .stage{padding:10px 12px 12px}
+  .tabs{padding:10px 12px 0}
+}
+@media (max-height:500px){
+  .top{padding:4px 8px 4px 4px}
+  .eyebrow{display:none}
+  .top h2{font-size:16px}
+  .tabs{padding:6px 12px 0}
+  .tab,.tabs .primary{height:40px}
+  .stage{padding:6px 12px 8px}
 }
 </style>
 </head>
@@ -162,11 +180,6 @@ button{cursor:pointer}
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setH">
     <div class="sheet-top"><h2 id="setH">Tetapan</h2><button type="button" class="xbtn" id="setx">Tutup</button></div>
     <p id="setIntro"></p>
-    <section><h3 id="s1h"></h3><p id="s1p"></p>
-      <div class="tools"><button type="button" id="exp"></button><button type="button" id="imp"></button></div></section>
-    <section><h3 id="s2h"></h3><p id="s2p"></p>
-      <div class="tools"><button type="button" id="dl"></button><button type="button" id="up"></button></div>
-      <input type="file" id="upf" accept=".json,application/json" hidden></section>
     <section id="s3"><h3 id="s3h"></h3><p id="s3p"></p><div class="own" id="own"></div></section>
   </div>
 </div>
@@ -204,14 +217,14 @@ var BUILTIN={
 11:[['A','1ERMkz00Wx5PpZ1cvKIcwzx5CBNQHvrD1'],['B','13Cs81OMa396Q6NkbccHoCrUhvYVh3c97']]
 };
 var KEY='notahaji.v1';
-var S={links:{},done:{},last:null,indexId:null,lang:null};
-try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;}}catch(e){}
+var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
 sub:'Kursus Asas Haji 2026 · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
-settings:'Tetapan',close:'Tutup',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
-setIntro:'Semua nota sudah sedia dalam app. Anda tidak perlu guna tetapan ini untuk membaca. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
+settings:'Tetapan',close:'Tutup',enlarge:'Besarkan nota',exitFocus:'Keluar',noNotes:'Nota minggu ini belum ada.',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
+setIntro:'Bahagian ini untuk pemilik app sahaja.',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
 s2h:'Simpan salinan sandaran',s2p:'Nota sudah sedia dalam app, jadi tiada apa yang perlu dimuat naik untuk membaca. Sandaran ini hanya menyimpan tanda "dah baca" dan sebarang nota tambahan yang anda sendiri masukkan.',
 publishBtn:'Terbitkan senarai nota (untuk semua peranti dan pembaca)',publishing:'Menerbitkan senarai…',published:function(n){return n?('Siap. '+n+' pautan diterbitkan. Peranti lain akan nampak bila buka pautan kongsi.'):'Semua pautan sudah diterbitkan.';},publishFail:'Gagal menerbitkan senarai. Cuba log masuk pemilik semula.',
@@ -250,8 +263,8 @@ months:{}
 },
 en:{
 sub:'Kursus Asas Haji 2026 · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
-settings:'Settings',close:'Close',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
-setIntro:'All the notes are already in the app. You do not need these settings to read them. They are only for saving or moving your "read" marks.',
+settings:'Settings',close:'Close',enlarge:'Enlarge note',exitFocus:'Exit',noNotes:'There are no notes for this week yet.',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
+setIntro:'This section is for the app owner only.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
 s2h:'Save a backup copy',s2p:'The notes are already built into the app, so nothing needs uploading to read them. This backup only keeps your "read" marks and any extra notes you added yourself.',
 publishBtn:'Publish notes list (for all devices and readers)',publishing:'Publishing the list…',published:function(n){return n?('Done. '+n+' links published. Other devices will see them when they open the share link.'):'All links are already published.';},publishFail:'Could not publish the list. Try signing in as owner again.',
@@ -297,7 +310,8 @@ var remote={links:{}};          // indeks nota dari Drive (dikongsi pemilik)
 var token=null,tokenExp=0,tc=null;
 var owner=false,folderId=null,busy=false,msg='';
 var sel=null,active=0,adding=false,query='';
-var wide=window.matchMedia('(min-width:900px)');
+var wide=window.matchMedia('(min-width:900px) and (min-height:560px)');
+var focus=false,fsByUs=false;
 var $=function(id){return document.getElementById(id);};
 
 function h(tag,props){
@@ -326,7 +340,9 @@ function svg(inner,size){
 var ICON={
   back:'<path d="M14.5 6l-6 6 6 6"/>',
   dl:'<path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/>',
-  ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>'
+  ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  expand:'<path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/>',
+  shrink:'<path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/>'
 };
 function driveId(u){
   var m=u.match(/\/file\/d\/([\w-]{10,})/)||u.match(/[?&]id=([\w-]{10,})/)||u.match(/\/d\/([\w-]{10,})/);
@@ -452,7 +468,7 @@ function signIn(){
       renderOwner();renderDetail();
       return null;
     }
-    owner=true;msg=t('setupFolder');renderOwner();
+    owner=true;S.ownerMode=true;save();msg=t('setupFolder');renderOwner();
     return ensureSetup().then(function(){msg='';renderOwner();renderList();renderDetail();});
   }).catch(function(e){
     owner=false;token=null;
@@ -509,6 +525,7 @@ function publishAll(){
 
 /* ---------- Paparan ---------- */
 function renderOwner(){
+  $('setbtn').hidden=!(S.ownerMode||owner);
   var box=$('own'),mb=$('ownmsg');
   box.textContent='';mb.textContent='';
   if(msg)mb.appendChild(h('div',{class:'note',role:'status',text:msg}));
@@ -551,6 +568,21 @@ function markBtn(n,extra){
   }},svg(ICON.ok,18),d?t('unmark'):t('mark'));
 }
 
+function setFocus(on){
+  focus=!!on;
+  $('app').classList.toggle('focus',focus);
+  var de=document.documentElement;
+  if(focus&&de.requestFullscreen&&!document.fullscreenElement){
+    de.requestFullscreen().then(function(){fsByUs=true;}).catch(function(){});
+  }else if(!focus&&document.fullscreenElement&&fsByUs){
+    fsByUs=false;document.exitFullscreen().catch(function(){});
+  }
+  renderDetail();
+}
+document.addEventListener('fullscreenchange',function(){
+  if(!document.fullscreenElement&&fsByUs){fsByUs=false;if(focus){focus=false;$('app').classList.remove('focus');renderDetail();}}
+});
+
 function renderDetail(){
   var box=$('detail');
   box.textContent='';
@@ -558,6 +590,7 @@ function renderDetail(){
   var w=getWeek(sel),links=linksOf(sel);
   if(active>=links.length)active=Math.max(0,links.length-1);
   var cur=links[active];
+  var reading=!!cur&&!adding;
 
   box.appendChild(h('div',{class:'top'},
     h('button',{type:'button',class:'icon-btn back','aria-label':t('back'),onclick:function(){go(null);}},svg(ICON.back,24)),
@@ -566,27 +599,28 @@ function renderDetail(){
       h('h2',{text:w.s}),
       h('p',{text:w.f})
     ),
-    cur?h('a',{class:'icon-btn',href:'https://drive.google.com/uc?export=download&id='+cur.id,target:'_blank',rel:'noopener','aria-label':t('dlPdf'),style:'text-decoration:none;color:inherit'},svg(ICON.dl)):null,
-    markBtn(w.n)
+    cur?h('a',{class:'icon-btn',href:'https://drive.google.com/uc?export=download&id='+cur.id,target:'_blank',rel:'noopener','aria-label':t('dlPdf'),title:t('dlPdf'),style:'text-decoration:none;color:inherit'},svg(ICON.dl)):null,
+    reading?h('button',{type:'button',class:'icon-btn','aria-label':t('enlarge'),title:t('enlarge'),onclick:function(){setFocus(true);}},svg(ICON.expand)):null
   ));
 
   var tabs=h('div',{class:'tabs'});
-  links.forEach(function(l,i){
-    tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;renderDetail();}},l.label));
-  });
-  if(links.length)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},t('addTab')));
-  if(links.length)box.appendChild(tabs);
+  if(links.length>1||owner){
+    links.forEach(function(l,i){
+      tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;renderDetail();}},l.label));
+    });
+  }
+  if(owner)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},t('addTab')));
+  if(links.length){tabs.appendChild(h('span',{class:'sp'}));tabs.appendChild(markBtn(w.n));}
+  if(tabs.childNodes.length)box.appendChild(tabs);
 
   var stage=h('div',{class:'stage'});
   if(!links.length||adding){
-    stage.appendChild(addCard(links.length===0));
+    if(owner)stage.appendChild(addCard(links.length===0));
+    else stage.appendChild(h('p',{class:'empty',text:t('noNotes')}));
   }else{
     stage.appendChild(h('iframe',{class:'frame',src:'https://drive.google.com/file/d/'+cur.id+'/preview',title:cur.label,allow:'fullscreen',loading:'lazy'}));
-    var bar=h('div',{class:'stage-bar'},
-      h('a',{href:'https://drive.google.com/file/d/'+cur.id+'/view',target:'_blank',rel:'noopener',text:t('openDrive')})
-    );
-    if(!cur.def&&(!cur.remote||owner)){
-      bar.appendChild(h('button',{type:'button',class:'danger',onclick:function(){
+    if(owner&&!cur.def){
+      stage.appendChild(h('div',{class:'stage-bar'},h('button',{type:'button',class:'danger',onclick:function(){
         if(!confirm(t('removeConfirm',cur.label)))return;
         if(cur.remote){
           var a=remoteLinks(sel);
@@ -596,13 +630,19 @@ function renderDetail(){
         var b=localLinks(sel);
         for(var j=0;j<b.length;j++){if(b[j].id===cur.id){b.splice(j,1);break;}}
         active=0;save();renderList();renderDetail();
-      }},t('remove')));
+      }},t('remove'))));
     }
-    bar.appendChild(h('span',{text:cur.remote?t('emptyRemote'):t('emptyLocal')}));
-    stage.appendChild(bar);
   }
   box.appendChild(stage);
-  box.appendChild(h('div',{class:'bottom'},markBtn(w.n)));
+
+  if(focus&&reading){
+    var fx=h('div',{class:'fx'});
+    fx.appendChild(h('button',{type:'button','aria-label':t('exitFocus'),onclick:function(){setFocus(false);}},svg(ICON.shrink,18),t('exitFocus')));
+    if(links.length>1)links.forEach(function(l,i){
+      fx.appendChild(h('button',{type:'button',class:i===active?'on':'',onclick:function(){active=i;renderDetail();}},l.label));
+    });
+    box.appendChild(fx);
+  }
 }
 
 function addCard(first){
@@ -662,6 +702,7 @@ function addCard(first){
 
 /* ---------- Laluan ---------- */
 function go(n){
+  if(n===null&&focus){focus=false;$('app').classList.remove('focus');if(document.fullscreenElement&&fsByUs){fsByUs=false;document.exitFullscreen().catch(function(){});}}
   if(n===null){history.pushState(null,'',location.pathname);}
   else{history.pushState(null,'','#/minggu/'+n);}
   route();
@@ -673,6 +714,7 @@ function route(){
     history.replaceState(null,'',location.pathname);
     loadRemote();
   }
+  if(/^#\/owner/.test(location.hash)){S.ownerMode=true;save();history.replaceState(null,'',location.pathname);applyStatic();renderOwner();}
   var m=location.hash.match(/^#\/minggu\/(\d+)/);
   var n=m?parseInt(m[1],10):null;
   if(n!==null&&!getWeek(n))n=null;
@@ -690,7 +732,7 @@ function applyStatic(){
   document.documentElement.lang=L()==='en'?'en':'ms';
   $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
   $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
-  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s1h','s1p','s2h','s2p','s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;$('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
+  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;
   var b=$('lang');b.textContent='';
   var en=L()==='en';
   var a=document.createElement(en?'span':'b');a.textContent='BM';
@@ -714,60 +756,12 @@ function closeSheet(){$('sheet').hidden=true;$('setbtn').focus();}
 $('setbtn').addEventListener('click',openSheet);
 $('setx').addEventListener('click',closeSheet);
 $('sheet').addEventListener('click',function(e){if(e.target===$('sheet'))closeSheet();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('sheet').hidden)closeSheet();});
+document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;if(!$('sheet').hidden)closeSheet();else if(focus)setFocus(false);});
 $('lang').addEventListener('click',function(){
   S.lang=L()==='en'?'ms':'en';save();
   applyStatic();renderOwner();renderList();renderDetail();
 });
 $('q').addEventListener('input',function(e){query=e.target.value;renderList();});
-
-$('exp').addEventListener('click',function(){
-  var code=btoa(unescape(encodeURIComponent(JSON.stringify({links:S.links,done:S.done,indexId:S.indexId}))));
-  function fallback(){window.prompt(t('codeSalin'),code);}
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(code).then(function(){alert(t('codeCopied'));},fallback);
-  }else fallback();
-});
-function applyBackup(o){
-  if(!o||typeof o.links!=='object')throw new Error('x');
-  Object.keys(o.links).forEach(function(k){
-    var cur=localLinks(k);
-    (o.links[k]||[]).forEach(function(l){
-      if(l&&l.id&&!cur.some(function(c){return c.id===l.id;}))cur.push({label:String(l.label||'Fail'),id:String(l.id)});
-    });
-  });
-  Object.keys(o.done||{}).forEach(function(k){S.done[k]=true;});
-  if(o.indexId&&!S.indexId){S.indexId=String(o.indexId);}
-  save();route();loadRemote();
-}
-$('imp').addEventListener('click',function(){
-  var code=window.prompt(t('codePaste'));
-  if(!code)return;
-  try{
-    applyBackup(JSON.parse(decodeURIComponent(escape(atob(code.trim())))));
-    alert(t('merged'));
-  }catch(e){alert(t('badCode'));}
-});
-$('dl').addEventListener('click',function(){
-  var d=new Date(),pad=function(x){return (x<10?'0':'')+x;};
-  var name='nota-haji-sandaran-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'.json';
-  var blob=new Blob([JSON.stringify({app:'nota-haji',links:S.links,done:S.done,indexId:S.indexId},null,2)],{type:'application/json'});
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download=name;
-  document.body.appendChild(a);a.click();
-  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
-});
-$('up').addEventListener('click',function(){$('upf').value='';$('upf').click();});
-$('upf').addEventListener('change',function(e){
-  var f=e.target.files&&e.target.files[0];
-  if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){
-    try{applyBackup(JSON.parse(r.result));alert(t('restored'));}
-    catch(err){alert(t('badBackup'));}
-  };
-  r.readAsText(f);
-});
 
 applyStatic();
 showInstall();
