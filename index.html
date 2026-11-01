@@ -27,11 +27,11 @@
 <style>
 :root{--g:#1F5E2B;--ink:#17261B;--mut:#55655A;--line:#D5DFD2;--bg:#EAEFE7;--card:#fff;--tint:#E1F0DB;--soft:#F1F5EE;color-scheme:light}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
-.app{display:flex;height:100vh;height:100dvh}
+.app{display:flex;position:fixed;inset:0;overflow:hidden}
 .list{width:420px;flex-shrink:0;background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
 .detail{flex:1;min-width:0;display:flex;flex-direction:row;min-height:0}
 .dmain{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
