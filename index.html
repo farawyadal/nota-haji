@@ -151,7 +151,7 @@ button{cursor:pointer}
     <div class="rows" id="rows"></div>
     <div class="foot">
       <div class="own" id="ownmsg"></div>
-      <div class="tools"><button type="button" id="setbtn">Tetapan</button></div>
+      <div class="tools"><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
       <small>Developed by FaridAssamani</small>
     </div>
   </aside>
@@ -190,6 +190,19 @@ var WEEKS=[
 {n:11,s:'Kesihatan',f:'Kesihatan',p:'243–262',d:'11 Okt'},
 {n:12,s:'Pengurusan Haji: Taklimat',f:'Pengurusan Haji: Taklimat Pengurusan',p:'263–284',d:'13 Dis'}
 ];
+var BUILTIN={
+1:[['A','1ZCpneNyVmsDYHPhDDKpoioGXAJCp7-YP'],['B','1CD1WkEYhKrJMjBv7gDOQnnqKVg4LkBQN']],
+2:[['A','1SaWqvHNRgBlagnNVm70uhloDWTRvgLNF'],['B','1f0dr1NDwI5IS24VNNUUnOuPXpG21pEmy']],
+3:[['A','1LCMy__UKps9C8og9_SDZh1eqIAR1KUlM'],['B','1jSosInjEaA6sy6nOot7chvDwxL69x1Y5']],
+4:[['Nota','1hpwJ3dKL_RqDlAzQnuk9QgAWVJNHoAK0']],
+5:[['A','18KdH1rslpDtN-DtcNfREMW7Jsrxi1h1b'],['B','1ONrw_ClJQpNC7wqKH2EX6u4prEOJ9Ilt']],
+6:[['A','1P0N2lXQwPNp_Lwvep0vc87VfJ_7S24pY'],['B','1K1KsFHM5ojvB2mOiwPX37mjZIoWynpvn']],
+7:[['Nota','11zLVXnKN6pNn39o8fVAjYQe9zGHYCno7']],
+8:[['Nota','1sMY8y9Jl5oGoYxnJaq2YAxeLfl2zEb55']],
+9:[['A','15Vpip7bUW1iPbq-iXw2lv8tUuJqICkKg'],['B','1PdtCM9gKBTfdZO0fy4YZ9Kdr3LdBv9Gg']],
+10:[['A','1H8K45ha25noH0qWvPhAhYWQWE2u-hL9D'],['B','1OtDrb-FmCayoaOZomVvYNpm_IHllQYGq']],
+11:[['A','1ERMkz00Wx5PpZ1cvKIcwzx5CBNQHvrD1'],['B','13Cs81OMa396Q6NkbccHoCrUhvYVh3c97']]
+};
 var KEY='notahaji.v1';
 var S={links:{},done:{},last:null,indexId:null,lang:null};
 try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;}}catch(e){}
@@ -197,10 +210,10 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
 sub:'Kursus Asas Haji 2026 · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
-settings:'Tetapan',close:'Tutup',
-setIntro:'Anda tidak perlu guna tetapan ini untuk membaca nota. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
+settings:'Tetapan',close:'Tutup',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
+setIntro:'Semua nota sudah sedia dalam app. Anda tidak perlu guna tetapan ini untuk membaca. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
-s2h:'Simpan salinan sandaran',s2p:'Simpan satu fail yang mengandungi pautan dan tanda "dah baca", supaya tidak hilang jika app dipadam atau data pelayar dibersihkan. Untuk memulihkan, tekan "Muat naik sandaran" dan pilih fail itu.',
+s2h:'Simpan salinan sandaran',s2p:'Nota sudah sedia dalam app, jadi tiada apa yang perlu dimuat naik untuk membaca. Sandaran ini hanya menyimpan tanda "dah baca" dan sebarang nota tambahan yang anda sendiri masukkan.',
 publishBtn:'Terbitkan senarai nota (untuk semua peranti dan pembaca)',publishing:'Menerbitkan senarai…',published:function(n){return n?('Siap. '+n+' pautan diterbitkan. Peranti lain akan nampak bila buka pautan kongsi.'):'Semua pautan sudah diterbitkan.';},publishFail:'Gagal menerbitkan senarai. Cuba log masuk pemilik semula.',
 s3h:'Untuk pemilik app',s3p:'Hanya pemilik boleh memuat naik nota ke Drive. Pembaca lain tidak perlu buat apa-apa di sini.',
 ph:'Cari tajuk minggu, cth. dam atau umrah',exp:'Salin kod pindah',imp:'Tampal kod pindah',dl:'Muat turun sandaran',up:'Muat naik sandaran',
@@ -237,10 +250,10 @@ months:{}
 },
 en:{
 sub:'Kursus Asas Haji 2026 · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
-settings:'Settings',close:'Close',
-setIntro:'You do not need these settings to read the notes. They are only for saving or moving your "read" marks.',
+settings:'Settings',close:'Close',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
+setIntro:'All the notes are already in the app. You do not need these settings to read them. They are only for saving or moving your "read" marks.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
-s2h:'Save a backup copy',s2p:'Saves one file with your links and "read" marks, so they are not lost if the app is deleted or browser data is cleared. To restore, tap "Upload backup" and choose that file.',
+s2h:'Save a backup copy',s2p:'The notes are already built into the app, so nothing needs uploading to read them. This backup only keeps your "read" marks and any extra notes you added yourself.',
 publishBtn:'Publish notes list (for all devices and readers)',publishing:'Publishing the list…',published:function(n){return n?('Done. '+n+' links published. Other devices will see them when they open the share link.'):'All links are already published.';},publishFail:'Could not publish the list. Try signing in as owner again.',
 s3h:'App owner',s3p:'Only the owner can upload notes to Drive. Other readers do not need to do anything here.',
 ph:'Search week titles, e.g. dam or umrah',exp:'Copy transfer code',imp:'Paste transfer code',dl:'Download backup',up:'Upload backup',
@@ -324,7 +337,8 @@ function localLinks(n){return S.links[n]||(S.links[n]=[]);}
 function remoteLinks(n){return remote.links[n]||(remote.links[n]=[]);}
 function linksOf(n){
   var out=[],seen={};
-  (remote.links[n]||[]).forEach(function(l){seen[l.id]=1;out.push({label:l.label,id:l.id,remote:true});});
+  (BUILTIN[n]||[]).forEach(function(a){seen[a[1]]=1;out.push({label:a[0],id:a[1],def:true});});
+  (remote.links[n]||[]).forEach(function(l){if(!seen[l.id]){seen[l.id]=1;out.push({label:l.label,id:l.id,remote:true});}});
   (S.links[n]||[]).forEach(function(l){if(!seen[l.id])out.push({label:l.label,id:l.id,remote:false});});
   return out;
 }
@@ -571,7 +585,7 @@ function renderDetail(){
     var bar=h('div',{class:'stage-bar'},
       h('a',{href:'https://drive.google.com/file/d/'+cur.id+'/view',target:'_blank',rel:'noopener',text:t('openDrive')})
     );
-    if(!cur.remote||owner){
+    if(!cur.def&&(!cur.remote||owner)){
       bar.appendChild(h('button',{type:'button',class:'danger',onclick:function(){
         if(!confirm(t('removeConfirm',cur.label)))return;
         if(cur.remote){
@@ -676,13 +690,25 @@ function applyStatic(){
   document.documentElement.lang=L()==='en'?'en':'ms';
   $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
   $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
-  $('setbtn').textContent='\u2699 '+t('settings');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s1h','s1p','s2h','s2p','s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;$('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
+  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s1h','s1p','s2h','s2p','s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;$('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
   var b=$('lang');b.textContent='';
   var en=L()==='en';
   var a=document.createElement(en?'span':'b');a.textContent='BM';
   var c=document.createElement(en?'b':'span');c.textContent='EN';
   b.appendChild(a);b.appendChild(document.createTextNode(' | '));b.appendChild(c);
 }
+var dp=null;
+function standalone(){
+  try{return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}catch(e){return false;}
+}
+function showInstall(){$('instbtn').hidden=standalone();}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;showInstall();});
+window.addEventListener('appinstalled',function(){dp=null;$('instbtn').hidden=true;});
+$('instbtn').addEventListener('click',function(){
+  if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;$('instbtn').hidden=true;});return;}
+  var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  alert(ios?t('installIos'):t('installOther'));
+});
 function openSheet(){$('sheet').hidden=false;$('setx').focus();}
 function closeSheet(){$('sheet').hidden=true;$('setbtn').focus();}
 $('setbtn').addEventListener('click',openSheet);
@@ -744,6 +770,7 @@ $('upf').addEventListener('change',function(e){
 });
 
 applyStatic();
+showInstall();
 renderOwner();
 route();
 loadRemote();
