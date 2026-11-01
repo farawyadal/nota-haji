@@ -201,6 +201,7 @@ settings:'Tetapan',close:'Tutup',
 setIntro:'Anda tidak perlu guna tetapan ini untuk membaca nota. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
 s2h:'Simpan salinan sandaran',s2p:'Simpan satu fail yang mengandungi pautan dan tanda "dah baca", supaya tidak hilang jika app dipadam atau data pelayar dibersihkan. Untuk memulihkan, tekan "Muat naik sandaran" dan pilih fail itu.',
+publishBtn:'Terbitkan senarai nota (untuk semua peranti dan pembaca)',publishing:'Menerbitkan senarai…',published:function(n){return n?('Siap. '+n+' pautan diterbitkan. Peranti lain akan nampak bila buka pautan kongsi.'):'Semua pautan sudah diterbitkan.';},publishFail:'Gagal menerbitkan senarai. Cuba log masuk pemilik semula.',
 s3h:'Untuk pemilik app',s3p:'Hanya pemilik boleh memuat naik nota ke Drive. Pembaca lain tidak perlu buat apa-apa di sini.',
 ph:'Cari tajuk minggu, cth. dam atau umrah',exp:'Salin kod pindah',imp:'Tampal kod pindah',dl:'Muat turun sandaran',up:'Muat naik sandaran',
 stDone:'Dibaca',stNow:'Sedang dibaca',stHas:'Ada nota',stNone:'Belum ada',
@@ -240,6 +241,7 @@ settings:'Settings',close:'Close',
 setIntro:'You do not need these settings to read the notes. They are only for saving or moving your "read" marks.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
 s2h:'Save a backup copy',s2p:'Saves one file with your links and "read" marks, so they are not lost if the app is deleted or browser data is cleared. To restore, tap "Upload backup" and choose that file.',
+publishBtn:'Publish notes list (for all devices and readers)',publishing:'Publishing the list…',published:function(n){return n?('Done. '+n+' links published. Other devices will see them when they open the share link.'):'All links are already published.';},publishFail:'Could not publish the list. Try signing in as owner again.',
 s3h:'App owner',s3p:'Only the owner can upload notes to Drive. Other readers do not need to do anything here.',
 ph:'Search week titles, e.g. dam or umrah',exp:'Copy transfer code',imp:'Paste transfer code',dl:'Download backup',up:'Upload backup',
 stDone:'Read',stNow:'Reading',stHas:'Notes added',stNone:'No notes yet',
@@ -477,6 +479,20 @@ function shareLink(){
   else copy();
 }
 
+function publishAll(){
+  if(!owner||!S.indexId){return;}
+  var added=0;
+  Object.keys(S.links).forEach(function(k){
+    var rem=remoteLinks(k);
+    (S.links[k]||[]).forEach(function(l){
+      if(!rem.some(function(r){return r.id===l.id;})){rem.push({label:l.label,id:l.id});added++;}
+    });
+  });
+  msg=t('publishing');renderOwner();
+  pushIndex().then(function(){msg=t('published',added);renderOwner();renderList();renderDetail();})
+    .catch(function(){msg=t('publishFail');renderOwner();});
+}
+
 /* ---------- Paparan ---------- */
 function renderOwner(){
   var box=$('own'),mb=$('ownmsg');
@@ -487,6 +503,7 @@ function renderOwner(){
     box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:signIn,text:t('ownIn')}));
   }else{
     box.appendChild(h('div',{class:'note ok',text:t('ownOk')}));
+    box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:publishAll,text:t('publishBtn')}));
     box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:shareLink,text:t('shareBtn')}));
   }
   if(msg)box.appendChild(h('div',{class:'note',role:'status',text:msg}));
