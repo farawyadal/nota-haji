@@ -65,6 +65,17 @@ button{cursor:pointer}
 .chip.has{background:var(--soft);color:var(--g);border:1px solid #C3D0BF}
 .foot{padding:10px 20px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #E3EBDF;display:flex;flex-direction:column;gap:8px}
 .foot .tools{display:flex;gap:8px;flex-wrap:wrap}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheetbg[hidden]{display:none}
+.sheet{background:#fff;width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom))}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.sheet h2{margin:0;font-size:20px}
+.sheet h3{margin:18px 0 4px;font-size:16px}
+.sheet p{margin:0 0 10px;font-size:14px;line-height:1.5;color:var(--mut)}
+.sheet .tools{display:flex;gap:8px;flex-wrap:wrap}
+.sheet .tools button,.sheet .ownbtn,.sheet .xbtn{flex:1 1 40%;min-height:48px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
+.sheet .xbtn{flex:0 0 auto;padding:0 16px}
+@media (min-width:900px){.sheetbg{align-items:center}.sheet{border-radius:18px}}
 .foot .tools button,.ownbtn{flex:1 1 40%;min-height:44px;border-radius:10px;border:1px solid #C3D0BF;background:#fff;font-size:12px;font-weight:600}
 .ownbtn{width:100%}
 .own{display:flex;flex-direction:column;gap:6px}
@@ -139,20 +150,26 @@ button{cursor:pointer}
     </div>
     <div class="rows" id="rows"></div>
     <div class="foot">
-      <div class="own" id="own"></div>
-      <div class="tools">
-        <button type="button" id="exp">Salin kod pindah</button>
-        <button type="button" id="imp">Tampal kod pindah</button>
-        <button type="button" id="dl">Muat turun sandaran</button>
-        <button type="button" id="up">Muat naik sandaran</button>
-        <input type="file" id="upf" accept=".json,application/json" hidden>
-      </div>
+      <div class="own" id="ownmsg"></div>
+      <div class="tools"><button type="button" id="setbtn">Tetapan</button></div>
       <small>Developed by FaridAssamani</small>
     </div>
   </aside>
   <main class="detail" id="detail"></main>
 </div>
 
+<div class="sheetbg" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setH">
+    <div class="sheet-top"><h2 id="setH">Tetapan</h2><button type="button" class="xbtn" id="setx">Tutup</button></div>
+    <p id="setIntro"></p>
+    <section><h3 id="s1h"></h3><p id="s1p"></p>
+      <div class="tools"><button type="button" id="exp"></button><button type="button" id="imp"></button></div></section>
+    <section><h3 id="s2h"></h3><p id="s2p"></p>
+      <div class="tools"><button type="button" id="dl"></button><button type="button" id="up"></button></div>
+      <input type="file" id="upf" accept=".json,application/json" hidden></section>
+    <section id="s3"><h3 id="s3h"></h3><p id="s3p"></p><div class="own" id="own"></div></section>
+  </div>
+</div>
 <script src="config.js"></script>
 <script>
 (function(){
@@ -165,13 +182,13 @@ var WEEKS=[
 {n:3,s:'Rukun Haji: Ihram, Wuquf, Tawaf',f:'Rukun Haji: Niat Ihram, Wuquf dan Tawaf',p:'49–70',d:'18 Okt'},
 {n:4,s:'Rukun Haji: Sa’ie, Bercukur, Tertib',f:'Rukun Haji: Sa’ie, Bercukur/Bergunting dan Tertib pada Kebanyakan Rukun',p:'71–88',d:'25 Okt'},
 {n:5,s:'Wajib-wajib Haji',f:'Wajib-wajib Haji: Niat di Miqat, Larangan dalam Ihram, Dam & Mabit di Muzdalifah',p:'89–110',d:'1 Nov'},
-{n:6,s:'Melontar, Mabit di Mina & Nafar',f:'Wajib-wajib Haji: Melontar di Jamrah Kubra 10 Zulhijjah, Mabit di Mina dan Melontar pada Hari-hari Tasyriq dan Nafar',p:'111–130',d:''},
-{n:7,s:'Jenis Haji & Cara Mengerjakan',f:'Jenis Haji dan Cara-cara Mengerjakan Haji',p:'131–142',d:''},
-{n:8,s:'Aurat, Izin Suami, Taharah & Solat',f:'Aurat, Izin Suami, Taharah dan Solat',p:'143–180',d:''},
-{n:9,s:'Fiqh Wanita dalam Ibadat Haji',f:'Fiqh Wanita dalam Ibadat Haji',p:'181–210',d:''},
-{n:10,s:'Umrah, Niat Bersyarat, Tawaf Wada’',f:'Ibadat Umrah, Niat Bersyarat dan Tawaf Wada’',p:'211–242',d:''},
+{n:6,s:'Melontar, Mabit di Mina & Nafar',f:'Wajib-wajib Haji: Melontar di Jamrah Kubra 10 Zulhijjah, Mabit di Mina dan Melontar pada Hari-hari Tasyriq dan Nafar',p:'111–130',d:'8 Nov'},
+{n:7,s:'Jenis Haji & Cara Mengerjakan',f:'Jenis Haji dan Cara-cara Mengerjakan Haji',p:'131–142',d:'15 Nov'},
+{n:8,s:'Aurat, Izin Suami, Taharah & Solat',f:'Aurat, Izin Suami, Taharah dan Solat',p:'143–180',d:'22 Nov'},
+{n:9,s:'Fiqh Wanita dalam Ibadat Haji',f:'Fiqh Wanita dalam Ibadat Haji',p:'181–210',d:'29 Nov'},
+{n:10,s:'Umrah, Niat Bersyarat, Tawaf Wada’',f:'Ibadat Umrah, Niat Bersyarat dan Tawaf Wada’',p:'211–242',d:'6 Dis'},
 {n:11,s:'Kesihatan',f:'Kesihatan',p:'243–262',d:'11 Okt'},
-{n:12,s:'Pengurusan Haji: Taklimat',f:'Pengurusan Haji: Taklimat Pengurusan',p:'263–284',d:''}
+{n:12,s:'Pengurusan Haji: Taklimat',f:'Pengurusan Haji: Taklimat Pengurusan',p:'263–284',d:'13 Dis'}
 ];
 var KEY='notahaji.v1';
 var S={links:{},done:{},last:null,indexId:null,lang:null};
@@ -180,6 +197,11 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
 sub:'Kursus Haji 1Malaysia · 12 minggu',progLabel:'Kemajuan bacaan',weeks:'minggu',
+settings:'Tetapan',close:'Tutup',
+setIntro:'Anda tidak perlu guna tetapan ini untuk membaca nota. Ia hanya untuk menyimpan atau memindahkan tanda "dah baca".',
+s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
+s2h:'Simpan salinan sandaran',s2p:'Simpan satu fail yang mengandungi pautan dan tanda "dah baca", supaya tidak hilang jika app dipadam atau data pelayar dibersihkan. Untuk memulihkan, tekan "Muat naik sandaran" dan pilih fail itu.',
+s3h:'Untuk pemilik app',s3p:'Hanya pemilik boleh memuat naik nota ke Drive. Pembaca lain tidak perlu buat apa-apa di sini.',
 ph:'Cari tajuk minggu, cth. dam atau umrah',exp:'Salin kod pindah',imp:'Tampal kod pindah',dl:'Muat turun sandaran',up:'Muat naik sandaran',
 stDone:'Dibaca',stNow:'Sedang dibaca',stHas:'Ada nota',stNone:'Belum ada',
 noMatch:'Tiada tajuk padan.',pages:'Muka ',week:'Minggu ',cls:'Kelas ',
@@ -214,6 +236,11 @@ months:{}
 },
 en:{
 sub:'Kursus Haji 1Malaysia · 12 weeks',progLabel:'Reading progress',weeks:'weeks',
+settings:'Settings',close:'Close',
+setIntro:'You do not need these settings to read the notes. They are only for saving or moving your "read" marks.',
+s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
+s2h:'Save a backup copy',s2p:'Saves one file with your links and "read" marks, so they are not lost if the app is deleted or browser data is cleared. To restore, tap "Upload backup" and choose that file.',
+s3h:'App owner',s3p:'Only the owner can upload notes to Drive. Other readers do not need to do anything here.',
 ph:'Search week titles, e.g. dam or umrah',exp:'Copy transfer code',imp:'Paste transfer code',dl:'Download backup',up:'Upload backup',
 stDone:'Read',stNow:'Reading',stHas:'Notes added',stNone:'No notes yet',
 noMatch:'No matching titles.',pages:'Book pp. ',week:'Week ',cls:'Class ',
@@ -244,7 +271,7 @@ pickPdf:'Pick a PDF file first.',mustPdf:'The file must be a PDF.',
 codeCopied:'Code copied. Paste it on another device with "Paste transfer code".',codeSalin:'Copy this code and paste it on the other device:',
 codePaste:'Paste the transfer code from the other device:',merged:'Merged.',badCode:'Invalid code. Copy it again from the other device.',
 restored:'Backup restored and merged.',badBackup:'Invalid backup file.',
-months:{Okt:'Oct'}
+months:{Okt:'Oct',Dis:'Dec'}
 }};
 function L(){return S.lang||((navigator.language||'').toLowerCase().indexOf('ms')===0?'ms':'en');}
 function t(k,a){var v=(D[L()]||D.ms)[k];if(v===undefined)v=D.ms[k];return typeof v==='function'?v(a):v;}
@@ -447,8 +474,9 @@ function shareLink(){
 
 /* ---------- Paparan ---------- */
 function renderOwner(){
-  var box=$('own');
-  box.textContent='';
+  var box=$('own'),mb=$('ownmsg');
+  box.textContent='';mb.textContent='';
+  if(msg)mb.appendChild(h('div',{class:'note',role:'status',text:msg}));
   if(!CFG.CLIENT_ID){return;}
   if(!owner){
     box.appendChild(h('button',{type:'button',class:'ownbtn',onclick:signIn,text:t('ownIn')}));
@@ -626,13 +654,19 @@ function applyStatic(){
   document.documentElement.lang=L()==='en'?'en':'ms';
   $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
   $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
-  $('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
+  $('setbtn').textContent='\u2699 '+t('settings');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s1h','s1p','s2h','s2p','s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;$('exp').textContent=t('exp');$('imp').textContent=t('imp');$('dl').textContent=t('dl');$('up').textContent=t('up');
   var b=$('lang');b.textContent='';
   var en=L()==='en';
   var a=document.createElement(en?'span':'b');a.textContent='BM';
   var c=document.createElement(en?'b':'span');c.textContent='EN';
   b.appendChild(a);b.appendChild(document.createTextNode(' | '));b.appendChild(c);
 }
+function openSheet(){$('sheet').hidden=false;$('setx').focus();}
+function closeSheet(){$('sheet').hidden=true;$('setbtn').focus();}
+$('setbtn').addEventListener('click',openSheet);
+$('setx').addEventListener('click',closeSheet);
+$('sheet').addEventListener('click',function(e){if(e.target===$('sheet'))closeSheet();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('sheet').hidden)closeSheet();});
 $('lang').addEventListener('click',function(){
   S.lang=L()==='en'?'ms':'en';save();
   applyStatic();renderOwner();renderList();renderDetail();
