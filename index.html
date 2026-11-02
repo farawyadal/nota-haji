@@ -182,6 +182,8 @@ button{cursor:pointer}
   .stage{padding:6px 12px 8px}
 }
 </style>
+<!-- Statistik penggunaan (GoatCounter): tanpa cookie, tiada catatan atau maklumat peribadi dihantar -->
+<script data-goatcounter="https://farawyadal.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="app" id="app">
@@ -358,6 +360,15 @@ var sel=null,active=0,adding=false,query='';
 var wide=window.matchMedia('(min-width:900px) and (min-height:560px)');
 var focus=false,fsByUs=false;
 var $=function(id){return document.getElementById(id);};
+function track(path,title){
+  var tries=0;
+  (function go(){
+    try{
+      if(window.goatcounter&&window.goatcounter.count){window.goatcounter.count({path:'nota-haji/'+path,title:title,event:true});return;}
+    }catch(e){return;}
+    if(++tries<20)setTimeout(go,500);
+  })();
+}
 
 function h(tag,props){
   var el=document.createElement(tag);
@@ -781,7 +792,7 @@ function route(){
   var n=m?parseInt(m[1],10):null;
   if(n!==null&&!getWeek(n))n=null;
   if(n===null&&wide.matches)n=S.last&&getWeek(S.last)?S.last:1;
-  if(n!==sel){sel=n;active=0;adding=false;ned=null;if(!$('nsheet').hidden)$('nsheet').hidden=true;}
+  if(n!==sel){if(n!==null)track('minggu-'+n,t('wk')+n);sel=n;active=0;adding=false;ned=null;if(!$('nsheet').hidden)$('nsheet').hidden=true;}
   if(sel!==null&&!S.done[sel]&&linksOf(sel).length){S.last=sel;save();}
   $('app').classList.toggle('show-detail',sel!==null);
   renderList();renderDetail();
@@ -810,6 +821,7 @@ function showInstall(){$('instbtn').hidden=standalone();}
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;showInstall();});
 window.addEventListener('appinstalled',function(){dp=null;$('instbtn').hidden=true;});
 $('instbtn').addEventListener('click',function(){
+  track('pasang','Pasang app');
   if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;$('instbtn').hidden=true;});return;}
   var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   alert(ios?t('installIos'):t('installOther'));
