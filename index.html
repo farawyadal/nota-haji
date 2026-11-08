@@ -145,6 +145,17 @@ button{cursor:pointer}
 .nbar .cnt{min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--g);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
 .nbar .sp{flex:1}
 .app.focus .nbar{display:none}
+.resume{width:100%;text-align:left;border:0;border-radius:16px;background:var(--g);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-shrink:0}
+.resume .rx{flex:1;min-width:0}
+.resume .e{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.resume .tt{font-size:17px;font-weight:700;margin-top:2px;line-height:1.25}
+.resume .sb{font-size:13px;margin-top:2px;opacity:.9}
+.awake{margin:10px 28px 0;padding:4px 14px;min-height:44px;border-radius:12px;background:#fff;border:1px solid #C3D0BF;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600}
+.awake span{flex:1}
+.sw{width:52px;height:30px;border-radius:15px;border:0;background:#9AA89A;padding:3px;display:flex;justify-content:flex-start;flex-shrink:0}
+.sw[aria-checked=true]{background:var(--g);justify-content:flex-end}
+.sw i{width:24px;height:24px;border-radius:50%;background:#fff;display:block}
+.app.focus .awake{display:none}
 #nsbox{display:flex;flex-direction:column;gap:12px}
 #nsbox .primary{width:100%;flex-shrink:0}
 @media (min-width:900px) and (max-width:1399px){.list{width:340px}.npanel{width:300px}}
@@ -171,8 +182,10 @@ button{cursor:pointer}
   .tab{height:44px;padding:0 14px;font-size:13px}
   .stage{padding:10px 12px 12px}
   .tabs{padding:10px 12px 0}
+  .awake{margin:10px 12px 0}
 }
 @media (max-height:500px){
+  .awake{display:none}
   .nbar{height:44px;margin-bottom:6px}
   .top{padding:4px 8px 4px 4px}
   .eyebrow{display:none}
@@ -264,12 +277,12 @@ var BUILTIN={
 11:[['A','1ERMkz00Wx5PpZ1cvKIcwzx5CBNQHvrD1'],['B','13Cs81OMa396Q6NkbccHoCrUhvYVh3c97']]
 };
 var KEY='notahaji.v1';
-var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false,notes:{},pn:{},npanel:true};
-try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;S.notes=o.notes||{};S.pn=o.pn||{};S.npanel=o.npanel!==false;}}catch(e){}
+var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false,notes:{},pn:{},npanel:true,res:null,tab:{},awake:true};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;S.notes=o.notes||{};S.pn=o.pn||{};S.npanel=o.npanel!==false;S.res=o.res||null;S.tab=o.tab||{};S.awake=o.awake!==false;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
-sub:'Kursus Asas Haji 2026 · 12 minggu',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
+sub:'Kursus Asas Haji 2026 · 12 minggu',resume:'Sambung baca',awakeT:'Skrin kekal hidup',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
 settings:'Tetapan',close:'Tutup',enlarge:'Besarkan nota',exitFocus:'Keluar',noNotes:'Nota minggu ini belum ada.',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
 setIntro:'Bahagian ini untuk pemilik app sahaja.',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
@@ -309,7 +322,7 @@ restored:'Sandaran dipulihkan dan digabungkan.',badBackup:'Fail sandaran tak sah
 months:{}
 },
 en:{
-sub:'Kursus Asas Haji 2026 · 12 weeks',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
+sub:'Kursus Asas Haji 2026 · 12 weeks',resume:'Continue reading',awakeT:'Keep screen on',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
 settings:'Settings',close:'Close',enlarge:'Enlarge note',exitFocus:'Exit',noNotes:'There are no notes for this week yet.',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
 setIntro:'This section is for the app owner only.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
@@ -600,6 +613,26 @@ function renderOwner(){
   if(msg)box.appendChild(h('div',{class:'note',role:'status',text:msg}));
 }
 
+var wl=null,readingNow=false;
+function wlSync(){
+  if(!('wakeLock' in navigator))return;
+  var want=readingNow&&S.awake&&document.visibilityState==='visible';
+  if(want&&!wl){
+    wl=true;
+    navigator.wakeLock.request('screen').then(function(l){
+      if(!(readingNow&&S.awake)){try{l.release();}catch(e){}wl=null;return;}
+      wl=l;l.addEventListener('release',function(){if(wl===l)wl=null;});
+    }).catch(function(){wl=null;});
+  }else if(!want&&wl&&wl!==true){try{wl.release();}catch(e){}wl=null;}
+}
+document.addEventListener('visibilitychange',wlSync);
+function tabIdx(n){
+  if(n===null)return 0;
+  var l=S.tab[n];if(!l)return 0;
+  var a=linksOf(n);
+  for(var i=0;i<a.length;i++){if(a[i].label===l)return i;}
+  return 0;
+}
 function renderList(){
   var done=WEEKS.filter(function(w){return S.done[w.n];}).length;
   $('progText').textContent=done+' / 12 '+t('weeks');
@@ -609,6 +642,12 @@ function renderList(){
   rows.textContent='';
   var shown=WEEKS.filter(function(w){return !q||(w.f+' '+w.s+' minggu '+w.n).toLowerCase().indexOf(q)>-1;});
   if(!shown.length){rows.appendChild(h('p',{class:'err',style:'padding:12px',text:t('noMatch')}));return;}
+  if(!q&&!wide.matches&&S.res&&getWeek(S.res)&&linksOf(S.res).length){
+    var rw=getWeek(S.res),rl=linksOf(S.res),ri=tabIdx(S.res);
+    rows.appendChild(h('button',{type:'button',class:'resume','aria-label':t('resume')+', '+t('wk')+rw.n,onclick:function(){go(rw.n);}},
+      h('div',{class:'rx'},h('div',{class:'e',text:t('resume')}),h('div',{class:'tt',text:t('wk')+rw.n+' · '+rw.s}),rl.length>1?h('div',{class:'sb',text:t('nNote')+' '+rl[Math.min(ri,rl.length-1)].label}):null),
+      svg(ICON.next,26)));
+  }
   shown.forEach(function(w){
     var st=statusOf(w.n);
     var cls='row'+(sel===w.n&&wide.matches?' sel':'')+(S.done[w.n]?' done':'')+(S.last===w.n&&!S.done[w.n]?' nowr':'');
@@ -646,7 +685,7 @@ document.addEventListener('fullscreenchange',function(){
 function renderDetail(){
   var box=$('detail');
   box.textContent='';
-  if(sel===null)return;
+  if(sel===null){readingNow=false;wlSync();return;}
   var w=getWeek(sel),links=linksOf(sel);
   if(active>=links.length)active=Math.max(0,links.length-1);
   var cur=links[active];
@@ -669,12 +708,19 @@ function renderDetail(){
   var tabs=h('div',{class:'tabs'});
   if(links.length>1||owner){
     links.forEach(function(l,i){
-      tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;renderDetail();}},l.label));
+      tabs.appendChild(h('button',{type:'button',class:'tab'+(i===active&&!adding?' on':''),onclick:function(){active=i;adding=false;S.tab[sel]=l.label;save();renderDetail();}},l.label));
     });
   }
   if(owner)tabs.appendChild(h('button',{type:'button',class:'tab add'+(adding?' on':''),onclick:function(){adding=true;renderDetail();}},t('addTab')));
   if(links.length){tabs.appendChild(h('span',{class:'sp'}));tabs.appendChild(markBtn(w.n));}
   if(tabs.childNodes.length)main.appendChild(tabs);
+  if(reading&&'wakeLock' in navigator){
+    var sw=h('button',{type:'button',class:'sw',role:'switch','aria-checked':S.awake?'true':'false','aria-label':t('awakeT')},h('i'));
+    sw.addEventListener('click',function(){
+      S.awake=!S.awake;save();sw.setAttribute('aria-checked',S.awake?'true':'false');wlSync();
+    });
+    main.appendChild(h('div',{class:'awake'},h('span',{text:t('awakeT')}),sw));
+  }
 
   var stage=h('div',{class:'stage'});
   if(!links.length||adding){
@@ -701,6 +747,7 @@ function renderDetail(){
     main.appendChild(h('button',{type:'button',class:'nbar','aria-label':t('nTitle'),onclick:openNotes},svg(ICON.pen,20),t('nTitle'),h('span',{class:'cnt',text:String(pnGet(sel).length)}),h('span',{class:'sp'}),svg(ICON.up,20)));
   }
   box.appendChild(main);
+  readingNow=reading;wlSync();
   if(showPanel){
     var pnl=h('aside',{class:'npanel',id:'npanel'});
     box.appendChild(pnl);fillNotes(pnl,false);
@@ -712,7 +759,7 @@ function renderDetail(){
     if(!wide.matches)fx.appendChild(h('button',{type:'button','aria-label':t('nTitle'),onclick:openNotes},svg(ICON.pen,18)));
     else if(!S.npanel)fx.appendChild(h('button',{type:'button','aria-label':t('nShow'),onclick:function(){S.npanel=true;save();renderDetail();}},svg(ICON.pen,18)));
     if(links.length>1)links.forEach(function(l,i){
-      fx.appendChild(h('button',{type:'button',class:i===active?'on':'',onclick:function(){active=i;renderDetail();}},l.label));
+      fx.appendChild(h('button',{type:'button',class:i===active?'on':'',onclick:function(){active=i;S.tab[sel]=l.label;save();renderDetail();}},l.label));
     });
     box.appendChild(fx);
   }
@@ -792,8 +839,9 @@ function route(){
   var n=m?parseInt(m[1],10):null;
   if(n!==null&&!getWeek(n))n=null;
   if(n===null&&wide.matches)n=S.last&&getWeek(S.last)?S.last:1;
-  if(n!==sel){if(n!==null)track('minggu-'+n,t('wk')+n);sel=n;active=0;adding=false;ned=null;if(!$('nsheet').hidden)$('nsheet').hidden=true;}
+  if(n!==sel){if(n!==null)track('minggu-'+n,t('wk')+n);sel=n;active=tabIdx(n);adding=false;ned=null;if(!$('nsheet').hidden)$('nsheet').hidden=true;}
   if(sel!==null&&!S.done[sel]&&linksOf(sel).length){S.last=sel;save();}
+  if(sel!==null&&linksOf(sel).length&&S.res!==sel){S.res=sel;save();}
   $('app').classList.toggle('show-detail',sel!==null);
   renderList();renderDetail();
 }
