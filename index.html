@@ -83,6 +83,7 @@ button{cursor:pointer}
 .note{font-size:12px;color:var(--mut);line-height:1.4}
 .note.ok{color:var(--g);font-weight:600}
 .infolink{border:0;background:transparent;padding:10px 4px;font-size:12px;font-weight:600;color:var(--g);text-decoration:underline}
+.foot small.ver{opacity:.8}
 .foot small{font-size:12px;color:var(--mut);text-align:center}
 .top{background:var(--card);border-bottom:1px solid var(--line);padding:20px 28px 16px;display:flex;align-items:center;gap:16px}
 .top .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
@@ -101,7 +102,7 @@ button{cursor:pointer}
 .tab{height:44px;padding:0 18px;border-radius:22px;border:1px solid #C3D0BF;background:#fff;font-size:14px;font-weight:600}
 .tab.on{background:var(--g);border-color:var(--g);color:#fff}
 .tab.add{border-style:dashed;color:var(--g)}
-.stage{flex:1;min-height:0;padding:12px 28px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.stage{position:relative;flex:1;min-height:0;padding:12px 28px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
 .frame{flex:1;min-height:0;border:1px solid #C3D0BF;border-radius:14px;background:#fff;width:100%}
 .stage-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mut)}
 .stage-bar a,.stage-bar button{height:44px;padding:0 14px;border-radius:12px;border:1px solid #C3D0BF;background:#fff;font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;display:flex;align-items:center}
@@ -156,6 +157,8 @@ button{cursor:pointer}
 .sw[aria-checked=true]{background:var(--g);justify-content:flex-end}
 .sw i{width:24px;height:24px;border-radius:50%;background:#fff;display:block}
 .app.focus .awake{display:none}
+.spin{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border:5px solid #D5DFD2;border-top-color:var(--g);border-radius:50%;animation:nhspin .9s linear infinite;pointer-events:none}
+@keyframes nhspin{to{transform:rotate(360deg)}}
 #nsbox{display:flex;flex-direction:column;gap:12px}
 #nsbox .primary{width:100%;flex-shrink:0}
 @media (min-width:900px) and (max-width:1399px){.list{width:340px}.npanel{width:300px}}
@@ -222,6 +225,7 @@ button{cursor:pointer}
       <div class="tools"><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
       <small id="disc"></small>
       <small>Developed by FaridAssamani</small>
+      <small class="ver">Nota Haji · v1.5 · 22 Nov 2026 · © 2026</small>
     </div>
   </aside>
   <main class="detail" id="detail"></main>
@@ -282,7 +286,7 @@ try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.li
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
-sub:'Kursus Asas Haji 2026 · 12 minggu',resume:'Sambung baca',awakeT:'Skrin kekal hidup',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
+sub:'Kursus Asas Haji 2026 · 12 minggu',loadT:'Memuatkan nota',resume:'Sambung baca',awakeT:'Skrin kekal hidup',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
 settings:'Tetapan',close:'Tutup',enlarge:'Besarkan nota',exitFocus:'Keluar',noNotes:'Nota minggu ini belum ada.',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
 setIntro:'Bahagian ini untuk pemilik app sahaja.',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
@@ -322,7 +326,7 @@ restored:'Sandaran dipulihkan dan digabungkan.',badBackup:'Fail sandaran tak sah
 months:{}
 },
 en:{
-sub:'Kursus Asas Haji 2026 · 12 weeks',resume:'Continue reading',awakeT:'Keep screen on',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
+sub:'Kursus Asas Haji 2026 · 12 weeks',loadT:'Loading note',resume:'Continue reading',awakeT:'Keep screen on',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
 settings:'Settings',close:'Close',enlarge:'Enlarge note',exitFocus:'Exit',noNotes:'There are no notes for this week yet.',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
 setIntro:'This section is for the app owner only.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
@@ -727,7 +731,10 @@ function renderDetail(){
     if(owner)stage.appendChild(addCard(links.length===0));
     else stage.appendChild(h('p',{class:'empty',text:t('noNotes')}));
   }else{
-    stage.appendChild(h('iframe',{class:'frame',src:'https://drive.google.com/file/d/'+cur.id+'/preview',title:cur.label,allow:'fullscreen',loading:'lazy'}));
+    var fr=h('iframe',{class:'frame',src:'https://drive.google.com/file/d/'+cur.id+'/preview',title:cur.label,allow:'fullscreen',loading:'lazy'});
+    var sp=h('div',{class:'spin',role:'status','aria-label':t('loadT')});
+    fr.addEventListener('load',function(){if(sp.parentNode)sp.parentNode.removeChild(sp);});
+    stage.appendChild(fr);stage.appendChild(sp);
     if(owner&&!cur.def){
       stage.appendChild(h('div',{class:'stage-bar'},h('button',{type:'button',class:'danger',onclick:function(){
         if(!confirm(t('removeConfirm',cur.label)))return;
