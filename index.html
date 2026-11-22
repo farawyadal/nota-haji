@@ -84,6 +84,13 @@ button{cursor:pointer}
 .note.ok{color:var(--g);font-weight:600}
 .infolink{border:0;background:transparent;padding:10px 4px;font-size:12px;font-weight:600;color:var(--g);text-decoration:underline}
 .foot small.ver{opacity:.8}
+.upd{margin:12px 12px 0;padding:12px 14px;border-radius:14px;background:#FDF0D5;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.upd[hidden]{display:none}
+.upd .ut{flex:1;min-width:0}
+.upd .ut b{display:block;font-size:14px;color:#5E3A05}
+.upd .ut span{font-size:12px;color:#7A4A06}
+.upd button{height:44px;padding:0 16px;border-radius:12px;border:0;background:var(--g);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.mini{width:16px;height:16px;border:3px solid #D5DFD2;border-top-color:var(--g);border-radius:50%;animation:nhspin .9s linear infinite;display:inline-block;margin-right:6px;vertical-align:-3px}
 .foot small{font-size:12px;color:var(--mut);text-align:center}
 .top{background:var(--card);border-bottom:1px solid var(--line);padding:20px 28px 16px;display:flex;align-items:center;gap:16px}
 .top .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
@@ -204,6 +211,7 @@ button{cursor:pointer}
 <body>
 <div class="app" id="app">
   <aside class="list">
+    <div class="upd" id="upd" hidden></div>
     <div class="head">
       <div class="brand">
         <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.2 5.2 7.8 4.6 4.5 4.6v12.9c3.3 0 5.7.6 7.5 1.9 1.8-1.3 4.2-1.9 7.5-1.9V4.6c-3.3 0-5.7.6-7.5 1.9z"/><path d="M12 6.5v12.9"/></svg></div>
@@ -222,10 +230,10 @@ button{cursor:pointer}
     <div class="rows" id="rows"></div>
     <div class="foot">
       <div class="own" id="ownmsg"></div>
-      <div class="tools"><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
+      <div class="tools"><button type="button" id="updbtn"></button><button type="button" id="instbtn" hidden></button><button type="button" id="setbtn">Tetapan</button></div>
       <small id="disc"></small>
       <small>Developed by FaridAssamani</small>
-      <small class="ver">Nota Haji · v1.5 · 22 Nov 2026 · © 2026</small>
+      <small class="ver" id="ver"></small>
     </div>
   </aside>
   <main class="detail" id="detail"></main>
@@ -280,13 +288,14 @@ var BUILTIN={
 10:[['A','1H8K45ha25noH0qWvPhAhYWQWE2u-hL9D'],['B','1OtDrb-FmCayoaOZomVvYNpm_IHllQYGq']],
 11:[['A','1ERMkz00Wx5PpZ1cvKIcwzx5CBNQHvrD1'],['B','13Cs81OMa396Q6NkbccHoCrUhvYVh3c97']]
 };
+var APP_V='1.6',APP_D='22 Nov 2026',APP_Y='2026';
 var KEY='notahaji.v1';
 var S={links:{},done:{},last:null,indexId:null,lang:null,ownerMode:false,notes:{},pn:{},npanel:true,res:null,tab:{},awake:true};
 try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);S.links=o.links||{};S.done=o.done||{};S.last=o.last||null;S.indexId=o.indexId||null;S.lang=o.lang||null;S.ownerMode=!!o.ownerMode;S.notes=o.notes||{};S.pn=o.pn||{};S.npanel=o.npanel!==false;S.res=o.res||null;S.tab=o.tab||{};S.awake=o.awake!==false;}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var D={
 ms:{
-sub:'Kursus Asas Haji 2026 · 12 minggu',loadT:'Memuatkan nota',resume:'Sambung baca',awakeT:'Skrin kekal hidup',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
+sub:'Kursus Asas Haji 2026 · 12 minggu',updBtn:'\u21BB Semak kemas kini',updCheck:'Menyemak\u2026',updLatest:'Sudah versi terkini',updNew:'Versi baru tersedia',updTap:'tekan untuk kemas kini',updDo:'Kemas kini',updFail:'Tak dapat menyemak. Cuba lagi.',loadT:'Memuatkan nota',resume:'Sambung baca',awakeT:'Skrin kekal hidup',discT:'Bahan kursus © Tabung Haji. App tidak rasmi. ',infoL:'Maklumat',infoH:'Maklumat bahan',infoP:'Nota dalam app ini ialah bahan Kursus Asas Haji milik Lembaga Tabung Haji. App ini bukan app rasmi dan tiada kaitan dengan Tabung Haji. Ia dibuat untuk memudahkan peserta kursus membaca nota sendiri. Semua hak cipta bahan kekal milik Tabung Haji.',nTitle:'Catatan',nNew:'Catat baru',nEdit:'Edit',nNote:'Nota',nPg:'Muka surat',nText:'Catatan',nSave:'Simpan catatan',nCancel:'Batal',nDel:'Padam catatan',nDelQ:'Padam catatan ini?',nLocal:'Disimpan di peranti ini sahaja',nCopy:'Salin semua',nCopied:'Disalin',nEmpty:'Belum ada catatan untuk minggu ini.',nHide:'Sorok catatan',nNeed:'Taip catatan dahulu.',nPh:'Taip catatan di sini\u2026',pgw:'m/s ',wk:'Minggu ',nShow:'Buka catatan',progLabel:'Kemajuan bacaan',weeks:'minggu',
 settings:'Tetapan',close:'Tutup',enlarge:'Besarkan nota',exitFocus:'Keluar',noNotes:'Nota minggu ini belum ada.',install:'Pasang app',installIos:'Untuk pasang di iPhone atau iPad: tekan butang Kongsi di Safari, kemudian pilih "Add to Home Screen".',installOther:'Untuk pasang: buka menu pelayar (tiga titik), kemudian pilih "Install app" atau "Add to Home screen".',
 setIntro:'Bahagian ini untuk pemilik app sahaja.',
 s1h:'Pindah ke peranti lain',s1p:'Berguna bila guna tablet atau tukar fon. Tekan "Salin kod pindah" di satu peranti, hantar kod itu kepada diri sendiri (cth. melalui WhatsApp), kemudian tekan "Tampal kod pindah" di peranti lain.',
@@ -326,7 +335,7 @@ restored:'Sandaran dipulihkan dan digabungkan.',badBackup:'Fail sandaran tak sah
 months:{}
 },
 en:{
-sub:'Kursus Asas Haji 2026 · 12 weeks',loadT:'Loading note',resume:'Continue reading',awakeT:'Keep screen on',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
+sub:'Kursus Asas Haji 2026 · 12 weeks',updBtn:'\u21BB Check for updates',updCheck:'Checking\u2026',updLatest:'Already up to date',updNew:'New version available',updTap:'tap to update',updDo:'Update',updFail:'Could not check. Try again.',loadT:'Loading note',resume:'Continue reading',awakeT:'Keep screen on',discT:'Course material © Tabung Haji. Unofficial app. ',infoL:'About',infoH:'About the material',infoP:'The notes in this app are Kursus Asas Haji course material owned by Lembaga Tabung Haji. This is not an official app and is not affiliated with Tabung Haji. It was made to help course participants read their own notes. All copyright in the material remains with Tabung Haji.',nTitle:'Notes',nNew:'New note',nEdit:'Edit',nNote:'Note',nPg:'Page',nText:'Note',nSave:'Save note',nCancel:'Cancel',nDel:'Delete note',nDelQ:'Delete this note?',nLocal:'Saved on this device only',nCopy:'Copy all',nCopied:'Copied',nEmpty:'No notes for this week yet.',nHide:'Hide notes',nNeed:'Type a note first.',nPh:'Type your note here\u2026',pgw:'p. ',wk:'Week ',nShow:'Open notes',progLabel:'Reading progress',weeks:'weeks',
 settings:'Settings',close:'Close',enlarge:'Enlarge note',exitFocus:'Exit',noNotes:'There are no notes for this week yet.',install:'Install app',installIos:'To install on iPhone or iPad: tap the Share button in Safari, then choose "Add to Home Screen".',installOther:'To install: open the browser menu (three dots), then choose "Install app" or "Add to Home screen".',
 setIntro:'This section is for the app owner only.',
 s1h:'Move to another device',s1p:'Useful when you use a tablet or change phones. Tap "Copy transfer code" on one device, send the code to yourself (e.g. by WhatsApp), then tap "Paste transfer code" on the other device.',
@@ -860,7 +869,7 @@ function applyStatic(){
   document.documentElement.lang=L()==='en'?'en':'ms';
   $('sub').textContent=t('sub');$('progLabel').textContent=t('progLabel');
   $('q').placeholder=t('ph');$('q').setAttribute('aria-label',t('ph'));
-  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;
+  $('setbtn').textContent='\u2699 '+t('settings');$('instbtn').textContent='\u21E9 '+t('install');$('updbtn').textContent=t('updBtn');$('ver').textContent='Nota Haji \u00B7 v'+APP_V+' \u00B7 '+APP_D+' \u00B7 \u00A9 '+APP_Y;renderUpd();$('setH').textContent=t('settings');$('setx').textContent=t('close');$('setIntro').textContent=t('setIntro');['s3h','s3p'].forEach(function(k){$(k).textContent=t(k);});$('s3').hidden=!CFG.CLIENT_ID;
   var dc=$('disc');dc.textContent=t('discT');dc.appendChild(h('button',{type:'button',class:'infolink',onclick:openInfo},t('infoL')));
   var b=$('lang');b.textContent='';
   var en=L()==='en';
@@ -980,6 +989,42 @@ function openInfo(){$('iH').textContent=t('infoH');$('iP').textContent=t('infoP'
 function closeInfo(){$('isheet').hidden=true;var b=document.querySelector('#disc button');if(b)b.focus();}
 $('ix').addEventListener('click',closeInfo);
 $('isheet').addEventListener('click',function(e){if(e.target===$('isheet'))closeInfo();});
+var newV=null,lastChk=0;
+function renderUpd(){
+  var b=$('upd');if(!b)return;
+  b.textContent='';
+  if(!newV){b.hidden=true;return;}
+  b.hidden=false;
+  b.appendChild(h('div',{class:'ut'},h('b',{text:t('updNew')}),h('span',{text:'v'+newV+' \u00B7 '+t('updTap')})));
+  b.appendChild(h('button',{type:'button',onclick:doUpdate},t('updDo')));
+}
+function fetchVer(){
+  if(!window.fetch)return Promise.reject(new Error('nofetch'));
+  return fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('v');return r.json();}).then(function(j){return String(j.v);});
+}
+function doUpdate(){
+  if(!window.fetch){location.reload();return;}
+  var files=['./','index.html','config.js','manifest.webmanifest','version.json'];
+  Promise.all(files.map(function(f){return fetch(f,{cache:'reload'}).catch(function(){});})).then(function(){
+    if(window.caches&&caches.keys){return caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){});}
+  }).then(function(){location.reload();});
+}
+function checkUpd(manual){
+  var btn=$('updbtn');
+  lastChk=Date.now();
+  if(manual){btn.textContent='';btn.appendChild(h('span',{class:'mini'}));btn.appendChild(document.createTextNode(t('updCheck')));btn.disabled=true;}
+  fetchVer().then(function(v){
+    newV=(v&&v!==APP_V)?v:null;renderUpd();
+    if(manual){
+      if(newV){btn.disabled=false;btn.textContent=t('updBtn');doUpdate();}
+      else{btn.textContent='\u2713 '+t('updLatest')+' (v'+APP_V+')';setTimeout(function(){btn.disabled=false;btn.textContent=t('updBtn');},2500);}
+    }
+  }).catch(function(){
+    if(manual){btn.textContent=t('updFail');setTimeout(function(){btn.disabled=false;btn.textContent=t('updBtn');},2500);}
+  });
+}
+$('updbtn').addEventListener('click',function(){checkUpd(true);});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&Date.now()-lastChk>600000)checkUpd(false);});
 function openSheet(){$('sheet').hidden=false;$('setx').focus();}
 function closeSheet(){$('sheet').hidden=true;$('setbtn').focus();}
 $('setbtn').addEventListener('click',openSheet);
@@ -997,6 +1042,7 @@ showInstall();
 renderOwner();
 route();
 loadRemote();
+try{checkUpd(false);}catch(e){}
 })();
 </script>
 </body>
